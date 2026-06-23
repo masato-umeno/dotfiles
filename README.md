@@ -13,7 +13,7 @@ Prerequisite: GNU Stow.
 
 ```shell
 cd "$(ghq root)/github.com/01-mu/dotfiles"
-packages=(codex ghq git nix vim vscode zed zsh)
+packages=(codex ghostty ghq git nix vim vscode zed zsh)
 stow --simulate --target="$HOME" "${packages[@]}"
 stow --target="$HOME" "${packages[@]}"
 ```
