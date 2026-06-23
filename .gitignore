@@ -1,5 +1,3 @@
-.nvimlog
-
 # Keep Codex runtime/generated files out of this repo.
 codex/.codex/.codex-global-state.json*
 codex/.codex/.personality_migration

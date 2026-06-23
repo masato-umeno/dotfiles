@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-This repository is a dotfiles source of truth managed with GNU Stow. Put files under a top-level Stow package directory, mirroring their target paths below `$HOME`. Manage global macOS packages in the root `Brewfile`. Keep shared automation under `scripts/`, and platform-specific notes or configs under `windows/`.
+This repository is a dotfiles source of truth managed with GNU Stow. Put files under a top-level Stow package directory, mirroring their target paths below `$HOME`. Manage global macOS packages in the root `Brewfile`, and keep Windows-specific setup under `windows/`.
 
 ## Build, Test, and Development Commands
 
@@ -15,7 +15,6 @@ There is no build system. Validate changes with a Stow simulation and then reloa
 ## Coding Style & Naming Conventions
 
 - Keep edits minimal and consistent with existing file styles.
-- Lua configs generally use two-space indentation and trailing commas in tables where present.
 - Prefer lowercase filenames and conventional dot-config paths (e.g., `app/.config/app/...`).
 
 ## Testing Guidelines
