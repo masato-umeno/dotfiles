@@ -2,15 +2,14 @@
 
 ## Project Structure & Module Organization
 
-This repository is a dotfiles source of truth managed with `home-manager` and `nix-darwin` on macOS. Put files that should land in `$HOME` under `home/`, mirroring their target paths. Keep Nix code under `nix/`, with `flake.nix` at the repo root and modules under `nix/modules/`. Keep shared automation under `scripts/`, and platform-specific notes or configs under `windows/`.
+This repository is a dotfiles source of truth managed with GNU Stow. Put files under a top-level Stow package directory, mirroring their target paths below `$HOME`. Keep shared automation under `scripts/`, and platform-specific notes or configs under `windows/`.
 
 ## Build, Test, and Development Commands
 
-- `sudo nix run github:LnL7/nix-darwin -- switch --flake .#01-mu` — first macOS apply via `nix-darwin`.
-- `darwin-rebuild switch --flake .#01-mu` — apply the macOS system and `home-manager` config.
+- `stow --simulate --target="$HOME" codex ghq git nix vim vscode zed zsh` — preview the default macOS links.
+- `stow --target="$HOME" codex ghq git nix vim vscode zed zsh` — apply the default macOS links.
 
-There is no build system. Validate changes by reloading the target app (e.g., restart WezTerm, reopen Neovim) and confirming expected behavior.
-When adding new managed files, wire them into the relevant Nix module before applying the flake.
+There is no build system. Validate changes with a Stow simulation and then reload the target app (e.g., reopen Zed or start a new shell) to confirm expected behavior.
 
 ## Coding Style & Naming Conventions
 
@@ -20,8 +19,8 @@ When adding new managed files, wire them into the relevant Nix module before app
 
 ## Testing Guidelines
 
-There are no automated tests in this repository. Do lightweight manual checks relevant to the change (e.g., run `wezterm`, open Neovim, or reload shell config) and keep commits scoped to a single, verifiable change.
+There are no automated tests in this repository. Use the documented Stow simulation as the primary structural check, then perform a lightweight manual check relevant to the change and keep commits scoped to a single, verifiable change.
 
 ## Notes
 
-Global agent policies live under `home/.codex/AGENTS.md`. Keep this file focused on repository-specific guidance.
+Global agent policies live under `codex/.codex/AGENTS.md`. Keep this file focused on repository-specific guidance.

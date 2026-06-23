@@ -1,39 +1,53 @@
 # dotfiles
 
-Source of truth for my dotfiles. Edit only in this repository checkout, typically under `$(ghq root)/github.com/01-mu/dotfiles`.
-macOS is managed with `nix-darwin` plus `home-manager`.
-Prereq: Nix with flakes enabled.
+Source of truth for my dotfiles. Edit only in this repository checkout,
+typically under `$(ghq root)/github.com/01-mu/dotfiles`.
 
-## Apply on macOS
+GNU Stow manages user configuration. Nix is reserved for development
+environments defined by each project repository; this repository does not
+manage macOS or globally installed packages.
+
+## Apply with Stow
+
+Prerequisite: GNU Stow.
 
 ```shell
 cd "$(ghq root)/github.com/01-mu/dotfiles"
+packages=(codex ghq git nix vim vscode zed zsh)
+stow --simulate --target="$HOME" "${packages[@]}"
+stow --target="$HOME" "${packages[@]}"
 ```
 
-First switch:
+Use `--restow` after changing package contents and `--delete` to remove a
+package's links:
 
 ```shell
-sudo nix run github:LnL7/nix-darwin -- switch --flake .#01-mu
+stow --restow --target="$HOME" zsh
+stow --delete --target="$HOME" zsh
 ```
 
-Later switches:
-
-```shell
-darwin-rebuild switch --flake .#01-mu
-```
-
-`home-manager` is wired through the Darwin configuration, so one switch applies both system settings and user dotfiles.
-Package ownership is split by responsibility:
-
-- [`nix/modules/home/packages.nix`](nix/modules/home/packages.nix): minimal global CLI tools.
-- [`nix/modules/darwin/homebrew.nix`](nix/modules/darwin/homebrew.nix): GUI apps and host-specific exceptions.
-- Project repositories: runtimes and build dependencies via `devShell`s.
+Stow stops on conflicts instead of replacing existing files. During the
+migration, remove or back up links and files previously created by Home
+Manager before applying the corresponding package. Do not use `--adopt`
+without reviewing its changes because it can overwrite repository content.
 
 ## Layout
 
-- `home/` mirrors files that land in `$HOME`, such as `.zshrc`, `.vimrc`, `.config/...`, VS Code metadata, and Codex settings.
-- `nix/` contains the Nix modules used by `flake.nix`.
-- `windows/` keeps Windows-specific setup files.
+Each top-level package mirrors its paths below `$HOME`:
+
+- `zsh/.zshrc` becomes `~/.zshrc`.
+- `git/.config/git/config` becomes `~/.config/git/config`.
+- `codex/.codex/` contributes only repository-managed Codex files; runtime
+  files, caches, and secrets remain unmanaged in `~/.codex/`.
+- `vscode/Library/Application Support/Code/User/settings.json` targets the
+  macOS VS Code settings path.
+- `windows/` contains the separate Windows setup.
+
+## Per-project Nix
+
+Put `flake.nix`, `flake.lock`, and development dependencies in each project
+that needs them. Enter a project environment with `nix develop`, or use
+`direnv` with an `.envrc` that calls `use flake`.
 
 ## ghq
 
@@ -48,8 +62,9 @@ Clone with `ghq get`, then move to a repo under `$(ghq root)`.
 
 ## Codex
 
-Home Manager syncs repository-managed files from `home/.codex/` into `~/.codex/`.
-Runtime files, caches, secrets, and machine-local Codex state stay only under `~/.codex/`.
+The `codex` Stow package links repository-managed files into `~/.codex/`.
+Runtime files, caches, secrets, and machine-local Codex state stay only under
+`~/.codex/`.
 
 ### Safe wrapper
 
@@ -70,22 +85,13 @@ sandbox-exec -f ~/.codex/sandbox/deny-secrets.sb cat .env
 
 ### Android / Termux
 
-Android is not managed by `nix-darwin`, so sync the repository-managed Codex
-files directly:
-
 ```shell
-pkg install git rsync
+pkg install git stow
 git clone https://github.com/01-mu/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-scripts/sync-codex
+stow --target="$HOME" codex git vim zsh
 export PATH="$HOME/.codex/bin:$PATH"
 codex-safe
-```
-
-To expand a disposable test session first:
-
-```shell
-scripts/codex-test-session
 ```
 
 Windows: see `windows/README.md`.

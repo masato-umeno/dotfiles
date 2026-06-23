@@ -98,6 +98,14 @@ function chpwd() {
 # Add codex-safe to PATH
 export PATH="$HOME/.codex/bin:$PATH"
 
+if command -v direnv >/dev/null 2>&1; then
+  eval "$(direnv hook zsh)"
+fi
+
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init zsh)"
+fi
+
 #--------------------------------------------------------------------------------
 # Alias
 #--------------------------------------------------------------------------------
@@ -201,6 +209,3 @@ alias dcr='docker compose restart'
 alias dcu='docker compose up -d'
 alias dce='docker compose exec'
 alias dcd='docker compose down'
-
-# home-manager
-alias hms="home-manager switch -b backup --flake .#01-mu"
