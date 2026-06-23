@@ -1,4 +1,5 @@
 {
+  "disable_ai": false,
   "cli_default_open_behavior": "existing_window",
   "proxy": "",
   "agent_buffer_font_size": 12.0,
