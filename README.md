@@ -103,15 +103,4 @@ codex execpolicy check --pretty --rules ~/.codex/rules/policy-deny.rules -- sudo
 sandbox-exec -f ~/.codex/sandbox/deny-secrets.sb cat .env
 ```
 
-### Android / Termux
-
-```shell
-pkg install git stow
-git clone https://github.com/01-mu/dotfiles.git ~/dotfiles
-cd ~/dotfiles
-stow --target="$HOME" codex git vim zsh
-export PATH="$HOME/.codex/bin:$PATH"
-codex-safe
-```
-
 Windows: see `windows/README.md`.
