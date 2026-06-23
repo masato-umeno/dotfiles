@@ -1,4 +1,3 @@
-brew "aider"
 brew "direnv"
 brew "fzf"
 brew "gh"
