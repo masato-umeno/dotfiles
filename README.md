@@ -68,4 +68,24 @@ codex execpolicy check --pretty --rules ~/.codex/rules/policy-deny.rules -- sudo
 sandbox-exec -f ~/.codex/sandbox/deny-secrets.sb cat .env
 ```
 
+### Android / Termux
+
+Android is not managed by `nix-darwin`, so sync the repository-managed Codex
+files directly:
+
+```shell
+pkg install git rsync
+git clone https://github.com/01-mu/dotfiles.git ~/dotfiles
+cd ~/dotfiles
+scripts/sync-codex
+export PATH="$HOME/.codex/bin:$PATH"
+codex-safe
+```
+
+To expand a disposable test session first:
+
+```shell
+scripts/codex-test-session
+```
+
 Windows: see `windows/README.md`.
