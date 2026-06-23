@@ -3,9 +3,9 @@
 Source of truth for my dotfiles. Edit only in this repository checkout,
 typically under `$(ghq root)/github.com/01-mu/dotfiles`.
 
-GNU Stow manages user configuration. Nix is reserved for development
-environments defined by each project repository; this repository does not
-manage macOS or globally installed packages.
+GNU Stow manages user configuration, and the root `Brewfile` manages global
+command-line tools and macOS applications. Nix is reserved for development
+environments defined by each project repository.
 
 ## Apply with Stow
 
@@ -30,6 +30,26 @@ Stow stops on conflicts instead of replacing existing files. During the
 migration, remove or back up links and files previously created by Home
 Manager before applying the corresponding package. Do not use `--adopt`
 without reviewing its changes because it can overwrite repository content.
+
+## Homebrew
+
+Install everything declared in `Brewfile`:
+
+```shell
+brew bundle install --file=Brewfile
+```
+
+Check whether the machine matches the declarations:
+
+```shell
+brew bundle check --file=Brewfile
+```
+
+Preview packages that are installed but not declared before removing any:
+
+```shell
+brew bundle cleanup --file=Brewfile
+```
 
 ## Layout
 

@@ -2,12 +2,13 @@
 
 ## Project Structure & Module Organization
 
-This repository is a dotfiles source of truth managed with GNU Stow. Put files under a top-level Stow package directory, mirroring their target paths below `$HOME`. Keep shared automation under `scripts/`, and platform-specific notes or configs under `windows/`.
+This repository is a dotfiles source of truth managed with GNU Stow. Put files under a top-level Stow package directory, mirroring their target paths below `$HOME`. Manage global macOS packages in the root `Brewfile`. Keep shared automation under `scripts/`, and platform-specific notes or configs under `windows/`.
 
 ## Build, Test, and Development Commands
 
 - `stow --simulate --target="$HOME" codex ghq git nix vim vscode zed zsh` — preview the default macOS links.
 - `stow --target="$HOME" codex ghq git nix vim vscode zed zsh` — apply the default macOS links.
+- `brew bundle check --file=Brewfile` — check whether Homebrew matches the declarations.
 
 There is no build system. Validate changes with a Stow simulation and then reload the target app (e.g., reopen Zed or start a new shell) to confirm expected behavior.
 
