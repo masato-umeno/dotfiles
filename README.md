@@ -40,6 +40,13 @@ Install everything declared in `Brewfile`:
 brew bundle install --file=Brewfile
 ```
 
+Update the TeX Live package manager and installed packages after installing
+MacTeX:
+
+```shell
+sudo tlmgr update --self && sudo tlmgr update --all
+```
+
 Check whether the machine matches the declarations:
 
 ```shell
