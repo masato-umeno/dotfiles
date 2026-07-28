@@ -1,7 +1,8 @@
 # dotfiles
 
-Source of truth for my dotfiles. Edit only in this repository checkout,
-typically under `$(ghq root)/github.com/01-mu/dotfiles`.
+Source of truth for my dotfiles. Edit only in this repository checkout. New
+clones live under `$(ghq root)/github.com/masato-umeno/dotfiles`; an existing
+checkout may still be under the former owner path.
 
 GNU Stow manages user configuration, and the root `Brewfile` manages global
 command-line tools and macOS applications. Nix is reserved for development
@@ -12,7 +13,7 @@ environments defined by each project repository.
 Prerequisite: GNU Stow.
 
 ```shell
-cd "$(ghq root)/github.com/01-mu/dotfiles"
+cd "$(ghq root)/github.com/masato-umeno/dotfiles"
 packages=(codex ghostty ghq git nix vim vscode zed zsh)
 stow --simulate --target="$HOME" "${packages[@]}"
 stow --target="$HOME" "${packages[@]}"
