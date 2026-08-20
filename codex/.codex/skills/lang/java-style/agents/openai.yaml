@@ -1,4 +1,0 @@
-interface:
-  display_name: "Java Style"
-  short_description: "Prefer Java var when local type inference is clear."
-  default_prompt: "Use Java style guidance."

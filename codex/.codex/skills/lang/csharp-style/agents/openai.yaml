@@ -1,4 +1,0 @@
-interface:
-  display_name: "C# Style"
-  short_description: "Prefer C# var when local type inference is clear."
-  default_prompt: "Use C# style guidance."
