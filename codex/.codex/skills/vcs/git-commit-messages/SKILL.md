@@ -11,7 +11,7 @@ Define the required format, style, and granularity for git commit messages.
 
 ## Rules
 
-- Use English only.
+- Use the language appropriate to the project and user context.
 - Use `type: summary` or `type(scope): summary`.
 - Allow optional scope in parentheses when helpful (e.g., `feat(backend): ...`).
 - Use only these types: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `style`.

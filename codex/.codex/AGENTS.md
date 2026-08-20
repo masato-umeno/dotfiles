@@ -7,10 +7,9 @@
 
 ## Language Policy
 
-- All interactive communication with the user MUST be in English unless explicitly instructed otherwise.
+- Use the language requested by the user for interactive communication.
 - For natural-language content produced for a project (commit messages, comments, docs, Markdown),
-  follow the project's language rules when they exist; otherwise default to English.
-- Do not switch languages in user-facing communication unless explicitly instructed.
+  follow the project's language rules and surrounding context when they exist.
 - If project-specific rules define commit message conventions, follow those rules even if they differ.
 - When editing Markdown, review surrounding context and make additions feel consistent and non-jarring.
 
