@@ -1,0 +1,2 @@
+# Never deploy private overrides accidentally placed in this package.
+config\.local$

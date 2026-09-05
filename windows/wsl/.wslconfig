@@ -1,4 +1,4 @@
-# Place this fille directory under the C:\Users\[user_name]
+# Place this file in the Windows user profile directory (%USERPROFILE%).
 
 [wsl2]
 memory=6GB

@@ -95,9 +95,6 @@ function chpwd() {
 # Tool Path
 #--------------------------------------------------------------------------------
 
-# Add codex-safe to PATH
-export PATH="$HOME/.codex/bin:$PATH"
-
 if command -v direnv >/dev/null 2>&1; then
   eval "$(direnv hook zsh)"
 fi
@@ -209,3 +206,8 @@ alias dcr='docker compose restart'
 alias dcu='docker compose up -d'
 alias dce='docker compose exec'
 alias dcd='docker compose down'
+
+# Unity CLI
+if [[ -r "$HOME/.unity/env" ]]; then
+  . "$HOME/.unity/env"
+fi

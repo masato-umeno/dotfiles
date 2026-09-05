@@ -23,4 +23,9 @@ There are no automated tests in this repository. Use the documented Stow simulat
 
 ## Notes
 
+This repository is intended for public GitHub hosting. Use home-relative paths
+and generic examples; keep personal identities and machine-specific values in
+local files outside the repository and Stow packages. Git ignore rules do not
+exclude files from Stow deployment.
+
 Global agent policies live under `codex/.codex/AGENTS.md`. Keep this file focused on repository-specific guidance.

@@ -1,3 +1,10 @@
+# Personal settings and environment files must stay machine-local.
+/git/.config/git/config.local
+.env
+.env.*
+!.env.example
+!.env.template
+
 # Keep Codex runtime/generated files out of this repo.
 codex/.codex/.codex-global-state.json*
 codex/.codex/.personality_migration
