@@ -7,21 +7,32 @@ $DesktopTarget = [Environment]::GetFolderPath("Desktop")
 $RunShortcutDir = "C:\runshortcut"
 $ProfileSource = Join-Path $RepoRoot "windows\powershell\Microsoft.PowerShell_profile.ps1"
 $ProfileTarget = Join-Path $HOME "Documents\PowerShell\Microsoft.PowerShell_profile.ps1"
+$GitBashRcSource = Join-Path $RepoRoot "windows\git-bash\.bashrc"
+$GitBashRcTarget = Join-Path $HOME ".bashrc"
+$GitBashProfileSource = Join-Path $RepoRoot "windows\git-bash\.bash_profile"
+$GitBashProfileTarget = Join-Path $HOME ".bash_profile"
 $WslConfigSource = Join-Path $RepoRoot "windows\wsl\.wslconfig"
 $WslConfigTarget = Join-Path $HOME ".wslconfig"
 $VscodeSource = Join-Path $RepoRoot "windows\vscode\settings.json"
 $VscodeTarget = Join-Path $env:APPDATA "Code\User\settings.json"
-$AppsScoop = @(
-  "winmerge",
-  "slack",
-  "zoom",
-  "obsidian",
-  "googlechrome",
-  "sakuraeditor",
-  "vscode"
+
+$AppsWinget = @(
+  "Git.Git",
+  "WinMerge.WinMerge",
+  "SlackTechnologies.Slack",
+  "Zoom.Zoom",
+  "Obsidian.Obsidian",
+  "Google.Chrome",
+  "SakuraEditor.SakuraEditor",
+  "Microsoft.VisualStudioCode"
 )
-$AppsChoco = @(
-  "a5m2"
+
+$AppsScoop = @(
+  "direnv",
+  "fzf",
+  "ghq",
+  "jq",
+  "zoxide"
 )
 
 function Ensure-Directory([string]$Path) {
@@ -30,30 +41,27 @@ function Ensure-Directory([string]$Path) {
   }
 }
 
-Write-Host "[1/6] Install package managers (prefer scoop)"
+if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
+  throw "winget is required. Install or update App Installer, then run this script again."
+}
+
+Write-Host "[1/8] Install package managers"
 if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
   Set-ExecutionPolicy -Scope CurrentUser RemoteSigned -Force
   Invoke-RestMethod -Uri "https://get.scoop.sh" | Invoke-Expression
 }
-if (-not (Get-Command choco -ErrorAction SilentlyContinue)) {
-  Set-ExecutionPolicy -Scope CurrentUser Bypass -Force
-  Invoke-Expression ((New-Object System.Net.WebClient).DownloadString("https://community.chocolatey.org/install.ps1"))
+
+Write-Host "[2/8] Install apps and CLI tools"
+foreach ($app in $AppsWinget) {
+  winget install --id $app --exact --accept-source-agreements --accept-package-agreements
+}
+winget install --id "9NSBB9XTJW86" --exact --source msstore --accept-source-agreements --accept-package-agreements
+
+foreach ($app in $AppsScoop) {
+  scoop install $app
 }
 
-Write-Host "[2/6] Install apps (scoop preferred)"
-if (Get-Command scoop -ErrorAction SilentlyContinue) {
-  scoop bucket add extras
-  foreach ($app in $AppsScoop) {
-    scoop install $app
-  }
-}
-if (Get-Command choco -ErrorAction SilentlyContinue) {
-  foreach ($app in $AppsChoco) {
-    choco install $app -y
-  }
-}
-
-Write-Host "[3/6] Place .bat files on Desktop"
+Write-Host "[3/8] Place .bat files on Desktop"
 if (Test-Path $DesktopSource) {
   Ensure-Directory $DesktopTarget
   Copy-Item -Path (Join-Path $DesktopSource "*.bat") -Destination $DesktopTarget -Force
@@ -61,7 +69,7 @@ if (Test-Path $DesktopSource) {
   Write-Host "skip: desktop source not found: $DesktopSource"
 }
 
-Write-Host "[4/6] Create C:\runshortcut and add to PATH"
+Write-Host "[4/8] Create C:\runshortcut and add to PATH"
 Ensure-Directory $RunShortcutDir
 $UserPath = [Environment]::GetEnvironmentVariable("Path", "User")
 if (-not $UserPath) { $UserPath = "" }
@@ -71,7 +79,7 @@ if ($UserPath -notmatch [Regex]::Escape($RunShortcutDir)) {
   $env:Path = $NewUserPath + ";" + $env:Path
 }
 
-Write-Host "[5/6] Install PowerShell profile"
+Write-Host "[5/8] Install PowerShell profile"
 if (Test-Path $ProfileSource) {
   Ensure-Directory (Split-Path $ProfileTarget -Parent)
   Copy-Item -Path $ProfileSource -Destination $ProfileTarget -Force
@@ -79,14 +87,22 @@ if (Test-Path $ProfileSource) {
   Write-Host "skip: profile source not found: $ProfileSource"
 }
 
-Write-Host "[6/6] Install .wslconfig"
+Write-Host "[6/8] Install Git Bash settings"
+if ((Test-Path $GitBashRcSource) -and (Test-Path $GitBashProfileSource)) {
+  Copy-Item -Path $GitBashRcSource -Destination $GitBashRcTarget -Force
+  Copy-Item -Path $GitBashProfileSource -Destination $GitBashProfileTarget -Force
+} else {
+  Write-Host "skip: Git Bash settings not found"
+}
+
+Write-Host "[7/8] Install .wslconfig"
 if (Test-Path $WslConfigSource) {
   Copy-Item -Path $WslConfigSource -Destination $WslConfigTarget -Force
 } else {
   Write-Host "skip: wsl config not found: $WslConfigSource"
 }
 
-Write-Host "[7/7] Install VS Code settings"
+Write-Host "[8/8] Install VS Code settings"
 if (Test-Path $VscodeSource) {
   Ensure-Directory (Split-Path $VscodeTarget -Parent)
   Copy-Item -Path $VscodeSource -Destination $VscodeTarget -Force
@@ -95,6 +111,7 @@ if (Test-Path $VscodeSource) {
 }
 
 Write-Host "Windows bootstrap complete."
+Write-Host "Reopen PowerShell and Git Bash to load the updated environment."
 
 Write-Host "Next steps (WSL2 + Ubuntu):"
 Write-Host "  wsl --install -d Ubuntu"
