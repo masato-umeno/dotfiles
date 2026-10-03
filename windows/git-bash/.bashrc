@@ -21,14 +21,14 @@ shopt -s histappend
 __dotfiles_history_sync() {
   history -a
 }
-PROMPT_COMMAND="__dotfiles_history_sync\${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
+PROMPT_COMMAND="__dotfiles_history_sync${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
 
 if command -v fzf >/dev/null 2>&1; then
   __fzf_history() {
     local selected
     selected="$(history | sed 's/^[[:space:]]*[0-9][0-9]*[[:space:]]*//' | fzf --tac +s)" || return
     READLINE_LINE="$selected"
-    READLINE_POINT=\${#READLINE_LINE}
+    READLINE_POINT=${#READLINE_LINE}
   }
   bind -x '"\C-r":__fzf_history'
 fi
@@ -125,7 +125,7 @@ EOF
     mapfile -t files < <(printf '%s\n' "$entry" | jq -r '.files[]')
 
     git reset
-    git add -- "\${files[@]}"
+    git add -- "${files[@]}"
 
     echo "Committing: $msg"
     git commit -F - <<< "$msg"
