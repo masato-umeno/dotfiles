@@ -38,7 +38,27 @@ if command -v direnv >/dev/null 2>&1; then
 fi
 
 if command -v zoxide >/dev/null 2>&1; then
-  eval "$(zoxide init bash)"
+  ZOXIDE_CACHE_DIR="$HOME/.cache"
+  ZOXIDE_INIT="$ZOXIDE_CACHE_DIR/zoxide-init.bash"
+  ZOXIDE_BIN="$(command -v zoxide)"
+
+  if [[ ! -f "$ZOXIDE_INIT" || "$ZOXIDE_BIN" -nt "$ZOXIDE_INIT" ]]; then
+    mkdir -p "$ZOXIDE_CACHE_DIR"
+    zoxide init bash > "$ZOXIDE_INIT"
+
+    # zoxide 0.10.0 generates an invalid cygpath invocation on Git Bash/MSYS2.
+    # Patch only the affected generated lines; fixed zoxide versions are left unchanged.
+    case "$OSTYPE" in
+      msys*|cygwin*)
+        sed -i \
+          -e 's|\\command cygpath -w "\\builtin pwd -L"|\\command cygpath -w "$(\\builtin pwd -L)"|' \
+          -e 's|\\command cygpath -w "\\builtin pwd -P"|\\command cygpath -w "$(\\builtin pwd -P)"|' \
+          "$ZOXIDE_INIT"
+        ;;
+    esac
+  fi
+
+  source "$ZOXIDE_INIT"
 fi
 
 alias ls='ls --color=auto'
