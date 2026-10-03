@@ -11,6 +11,8 @@ $GitBashRcSource = Join-Path $RepoRoot "windows\git-bash\.bashrc"
 $GitBashRcTarget = Join-Path $HOME ".bashrc"
 $GitBashProfileSource = Join-Path $RepoRoot "windows\git-bash\.bash_profile"
 $GitBashProfileTarget = Join-Path $HOME ".bash_profile"
+$GitBashInputRcSource = Join-Path $RepoRoot "windows\git-bash\.inputrc"
+$GitBashInputRcTarget = Join-Path $HOME ".inputrc"
 $WslConfigSource = Join-Path $RepoRoot "windows\wsl\.wslconfig"
 $WslConfigTarget = Join-Path $HOME ".wslconfig"
 $VscodeSource = Join-Path $RepoRoot "windows\vscode\settings.json"
@@ -88,9 +90,14 @@ if (Test-Path $ProfileSource) {
 }
 
 Write-Host "[6/8] Install Git Bash settings"
-if ((Test-Path $GitBashRcSource) -and (Test-Path $GitBashProfileSource)) {
+if (
+  (Test-Path $GitBashRcSource) -and
+  (Test-Path $GitBashProfileSource) -and
+  (Test-Path $GitBashInputRcSource)
+) {
   Copy-Item -Path $GitBashRcSource -Destination $GitBashRcTarget -Force
   Copy-Item -Path $GitBashProfileSource -Destination $GitBashProfileTarget -Force
+  Copy-Item -Path $GitBashInputRcSource -Destination $GitBashInputRcTarget -Force
 } else {
   Write-Host "skip: Git Bash settings not found"
 }
