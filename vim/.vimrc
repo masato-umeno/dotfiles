@@ -1,116 +1,116 @@
-" jj keybind
+" jj キーバインド
 inoremap <silent> jj <ESC>
 
-" Disable creating a backup before overwriting a file
+" 上書き前にバックアップを作らない
 set nowritebackup
-" Disable creating a backup before overwriting a file
+" 上書き前にバックアップを作らない
 set nobackup
-" In blockwise visual mode, allow the cursor to move past the end of the line
+" 矩形ビジュアルモードで行末より先にカーソルを移動できるようにする
 set virtualedit=block
-" Allow deleting with backspace in insert mode
+" 挿入モードでバックスペースによる削除を許可する
 set backspace=indent,eol,start
-" Settings for full-width characters
+" 全角文字の設定
 set ambiwidth=double
-" Enable wildmenu (select files from the vim command bar)
+" wildmenu を有効にする(コマンドラインでファイルを選択できる)
 set wildmenu
 
 "----------------------------------------
-" Search
+" 検索
 "----------------------------------------
-" Ignore case when searching
+" 検索時に大文字小文字を区別しない
 set ignorecase
-" If search pattern contains lowercase letters, ignore case; if uppercase, be case-sensitive
+" 検索パターンが小文字のみなら区別せず、大文字を含めば区別する
 set smartcase
-" Wrap around when search reaches the end of file
+" 検索がファイル末尾に達したら先頭に戻る
 set wrapscan
-" Incremental search (search starts when the first character is typed)
+" インクリメンタルサーチ(1 文字目の入力から検索を始める)
 set incsearch
-" Highlight search results
+" 検索結果をハイライトする
 set hlsearch
 
 "----------------------------------------
-" Display
+" 表示
 "----------------------------------------
-" Do not beep on error messages
+" エラー時にビープ音を鳴らさない
 set noerrorbells
-" Treat backslashes in Windows paths as slashes
+" Windows パスのバックスラッシュをスラッシュとして扱う
 set shellslash
-" Highlight matching parentheses/braces
+" 対応する括弧をハイライトする
 set showmatch matchtime=1
-" Change indentation style
+" インデント方式を変更する
 set cinoptions+=:0
-" Reserve 2 lines for the command line area
+" コマンドライン領域を 2 行確保する
 set cmdheight=2
-" Always show the status line
+" ステータスラインを常に表示する
 set laststatus=2
-" Show unfinished command in the bottom-right corner
+" 入力中のコマンドを右下に表示する
 set showcmd
-" Display without truncation
+" 省略せずに表示する
 set display=lastline
-" Show tabs as ^I and EOL as $
+" タブを ^I、行末を $ で表示する
 set list
-" Visualize trailing spaces at line ends
+" 行末の空白を可視化する
 set listchars=tab:^\ ,trail:~
-" Save 10,000 command-line histories
+" コマンドライン履歴を 10,000 件保存する
 set history=10000
-" Set comment text color to light blue
+" コメントの文字色を水色にする
 hi Comment ctermfg=3
-" Insert spaces instead of tabs when pressing Tab in insert mode
+" 挿入モードで Tab を押したらタブの代わりにスペースを入れる
 set expandtab
-" Indentation width
+" インデント幅
 set shiftwidth=2
-" Width of inserted space characters when pressing Tab
+" Tab を押したときに挿入するスペースの幅
 set softtabstop=2
-" Display width of existing tab characters in file
+" ファイル内のタブ文字の表示幅
 set tabstop=2
-" Hide toolbar
+" ツールバーを隠す
 set guioptions-=T
-" Copy (yank) also goes to clipboard
+" コピー(ヤンク)をクリップボードにも送る
 set guioptions+=a
-" Hide menu bar
+" メニューバーを隠す
 set guioptions-=m
-" Hide right scrollbar
+" 右スクロールバーを隠す
 set guioptions+=R
-" Highlight matching parentheses
+" 対応する括弧をハイライトする
 set showmatch
-" Smart indent when wrapping lines
+" 改行時にスマートインデントする
 set smartindent
-" Do not create swap files
+" スワップファイルを作らない
 set noswapfile
-" Disable folding (do not fold unmatched lines)
+" 折りたたみを無効にする(一致しない行を折りたたまない)
 set nofoldenable
-" Show the window title
+" ウィンドウタイトルを表示する
 set title
-" Show line numbers
+" 行番号を表示する
 set number
-" Yank also copies to system clipboard
+" ヤンクをシステムのクリップボードにもコピーする
 set clipboard=unnamed,autoselect
-" Clear search highlight with double ESC
+" ESC 2 回で検索ハイライトを消す
 nnoremap <Esc><Esc> :nohlsearch<CR><ESC>
-" Enable syntax highlighting
+" シンタックスハイライトを有効にする
 syntax on
-" Treat all numbers as decimal
+" 数値はすべて 10 進数として扱う
 set nrformats=
-" Allow moving across lines with arrow keys and h/l
+" 矢印キーと h/l で行をまたいで移動できるようにする
 set whichwrap=b,s,h,l,<,>,[,],~
-" Enable mouse scrolling
+" マウスでのスクロールを有効にする
 set mouse=a
 
-" Auto reload .vimrc
+" .vimrc を自動で再読み込みする
 augroup source-vimrc
   autocmd!
   autocmd BufWritePost *vimrc source $MYVIMRC | set foldmethod=marker
   autocmd BufWritePost *gvimrc if has('gui_running') source $MYGVIMRC
 augroup END
 
-" Disable auto comment on new lines
+" 改行時の自動コメントを無効にする
 augroup auto_comment_off
   autocmd!
   autocmd BufEnter * setlocal formatoptions-=r
   autocmd BufEnter * setlocal formatoptions-=o
 augroup END
 
-" Auto-complete closing tags in HTML/XML
+" HTML/XML の閉じタグを自動補完する
 augroup MyXML
   autocmd!
   autocmd Filetype xml inoremap <buffer> </ </<C-x><C-o>

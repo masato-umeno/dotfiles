@@ -1,15 +1,14 @@
 # dotfiles
 
-Source of truth for my dotfiles. Edit only in this repository checkout. Use
-`ghq list -p` to locate the existing checkout.
+dotfiles の正本。編集はこのリポジトリのチェックアウトでのみ行う。既存のチェックアウトは
+`ghq list -p` で探す。
 
-GNU Stow manages user configuration, and the root `Brewfile` manages global
-command-line tools and macOS applications. Nix is reserved for development
-environments defined by each project repository.
+ユーザー設定は GNU Stow で、グローバルなコマンドラインツールと macOS アプリはルートの
+`Brewfile` で管理する。Nix は各プロジェクトのリポジトリで定義する開発環境専用とする。
 
-## Apply with Stow
+## Stow で適用する
 
-Prerequisite: GNU Stow. Run from the root of this repository checkout.
+前提: GNU Stow。このリポジトリのチェックアウトのルートで実行する。
 
 ```shell
 packages=(claude codex ghostty ghq git nix vim vscode zed zsh)
@@ -17,82 +16,75 @@ stow --simulate --target="$HOME" "${packages[@]}"
 stow --target="$HOME" "${packages[@]}"
 ```
 
-Use `--restow` after changing package contents and `--delete` to remove a
-package's links:
+パッケージの中身を変えたあとは `--restow` を、パッケージのリンクを外すときは `--delete` を使う:
 
 ```shell
 stow --restow --target="$HOME" zsh
 stow --delete --target="$HOME" zsh
 ```
 
-Stow stops on conflicts instead of replacing existing files. During the
-migration, remove or back up links and files previously created by Home
-Manager before applying the corresponding package. Do not use `--adopt`
-without reviewing its changes because it can overwrite repository content.
+Stow は既存ファイルを置き換えず、競合があると停止する。移行中は、対応するパッケージを適用する前に
+Home Manager が作ったリンクやファイルを削除するかバックアップする。`--adopt` はリポジトリの内容を
+上書きすることがあるため、変更を確認せずに使わない。
 
-## Personal Git settings
+## 個人用の Git 設定
 
-The shared Git configuration includes `~/.config/git/config.local` for
-identity and machine-specific overrides. Keep that file on the local machine,
-outside this repository and outside any Stow package. Configure your chosen
-commit identity there:
+共有の Git 設定は、識別情報とマシン固有の上書き設定のために `~/.config/git/config.local` を読み込む。
+このファイルはローカルマシン上の、このリポジトリと Stow パッケージの外に置く。使うコミット用の識別情報は
+そこで設定する:
 
 ```shell
 git config --file "$HOME/.config/git/config.local" user.name "YOUR_COMMIT_NAME"
 git config --file "$HOME/.config/git/config.local" user.email "YOUR_COMMIT_EMAIL"
 ```
 
-Choose the commit name and email you want published. Keeping the settings
-local does not hide the author identity recorded in Git commits. Removing
-personal values from current files also does not remove them from existing
-Git history or GitHub account metadata.
+コミットの名前とメールアドレスは公開されてよいものを選ぶ。設定をローカルに置いても、Git のコミットに
+記録される作者情報は隠れない。現在のファイルから個人情報を消しても、既存の Git 履歴や GitHub
+アカウントのメタデータからは消えない。
 
 ## Homebrew
 
-Install everything declared in `Brewfile`:
+`Brewfile` で宣言したものをすべてインストールする:
 
 ```shell
 brew bundle install --file=Brewfile
 ```
 
-Update the TeX Live package manager and installed packages after installing
-MacTeX:
+MacTeX をインストールしたら、TeX Live のパッケージマネージャーとインストール済みパッケージを更新する:
 
 ```shell
 sudo tlmgr update --self && sudo tlmgr update --all
 ```
 
-Check whether the machine matches the declarations:
+マシンの状態が宣言と一致しているか確認する:
 
 ```shell
 brew bundle check --file=Brewfile
 ```
 
-Preview packages that are installed but not declared before removing any:
+削除する前に、インストール済みだが宣言されていないパッケージを確認する:
 
 ```shell
 brew bundle cleanup --file=Brewfile
 ```
 
-## Layout
+## 構成
 
-Each top-level package mirrors its paths below `$HOME`:
+各トップレベルのパッケージは `$HOME` 以下のパスをそのまま再現する:
 
-- `zsh/.zshrc` becomes `~/.zshrc`.
-- `git/.config/git/config` becomes `~/.config/git/config`.
-- `claude/.claude/` contributes global Claude Code guidance, settings, and
-  skills.
-- `codex/.codex/` contributes global Codex guidance. Runtime files, caches,
-  secrets, and learned state remain unmanaged.
-- `vscode/Library/Application Support/Code/User/settings.json` targets the
-  macOS VS Code settings path.
-- `windows/` contains the separate Windows setup.
+- `zsh/.zshrc` は `~/.zshrc` になる。
+- `git/.config/git/config` は `~/.config/git/config` になる。
+- `claude/.claude/` は Claude Code のグローバルな指示、設定、スキルを提供する。
+- `codex/.codex/` は Codex のグローバルな指示を提供する。実行時ファイル、キャッシュ、
+  秘密情報、学習された状態は管理しない。
+- `vscode/Library/Application Support/Code/User/settings.json` は macOS の VS Code
+  設定パスに配置される。
+- `windows/` には Windows 用の別セットアップがある。
 
-## Per-project Nix
+## プロジェクトごとの Nix
 
-Put `flake.nix`, `flake.lock`, and development dependencies in each project
-that needs them. Enter a project environment with `nix develop`, or use
-`direnv` with an `.envrc` that calls `use flake`.
+`flake.nix`、`flake.lock`、開発用の依存関係は、必要な各プロジェクトに置く。プロジェクトの環境には
+`nix develop` で入るか、`use flake` を呼ぶ `.envrc` を用意して `direnv` を使う。
 
 ## ghq
 
@@ -101,43 +93,40 @@ ghq get https://github.com/OWNER/REPO
 ghq list
 ```
 
-This repo manages the `ghq` config too. The root is `~/ghq`, so GitHub repositories are stored under `~/ghq/github.com/OWNER/REPO`.
+このリポジトリは `ghq` の設定も管理する。ルートは `~/ghq` なので、GitHub のリポジトリは
+`~/ghq/github.com/OWNER/REPO` に置かれる。
 
-Clone with `ghq get`, then move to a repo under `$(ghq root)`.
+`ghq get` でクローンし、`$(ghq root)` 以下のリポジトリに移動する。
 
 ## Codex
 
-The `codex` Stow package links global guidance into `~/.codex/`. Runtime files, caches, secrets, and
-machine-local Codex state stay unmanaged.
+`codex` Stow パッケージはグローバルな指示を `~/.codex/` にリンクする。実行時ファイル、キャッシュ、
+秘密情報、マシンローカルな Codex の状態は管理しない。
 
-### Permissions and managed files
+### 権限と管理対象ファイル
 
-Use Codex's native permission modes instead of a separate sandbox wrapper.
-Start with the workspace boundary and choose broader permissions per task only
-when the work requires them. Use `/permissions` to inspect or change the active
-mode.
+別のサンドボックスラッパーではなく、Codex 標準の権限モードを使う。ワークスペースの範囲から始め、
+作業に必要なときだけタスクごとに広い権限を選ぶ。現在のモードの確認や変更には `/permissions` を使う。
 
-Global instructions live in `~/.codex/AGENTS.md`. Learned command rules, app settings, authentication,
-plugins, caches, logs, sessions, and other runtime state remain machine-local.
+グローバルな指示は `~/.codex/AGENTS.md` にある。学習されたコマンドルール、アプリ設定、認証、
+プラグイン、キャッシュ、ログ、セッションなどの実行時の状態はマシンローカルに置く。
 
-### Model and usage
+### モデルと使用量
 
-On a ChatGPT Plus plan, default to `gpt-6-sol` with `medium` reasoning and
-`high` for plan mode in the machine-local `~/.codex/config.toml`. Switch to
-`gpt-6-luna` for light tasks or `gpt-6-astra` for hard tasks with `/model`.
+ChatGPT Plus プランでは、マシンローカルの `~/.codex/config.toml` で既定を `gpt-6-sol`、
+reasoning を `medium`、plan モードを `high` にする。軽い作業は `gpt-6-luna`、難しい作業は
+`gpt-6-astra` に `/model` で切り替える。
 
 ## Claude Code
 
-The `claude` Stow package links `~/.claude/CLAUDE.md`,
-`~/.claude/settings.json`, and `~/.claude/skills/`. `CLAUDE.md` imports
-`~/.codex/AGENTS.md`, so apply the `codex` package too and keep shared policy
-there. The `codex` skill lets Claude Code consult the Codex CLI read-only for
-independent reviews or second opinions when that adds value.
+`claude` Stow パッケージは `~/.claude/CLAUDE.md`、`~/.claude/settings.json`、
+`~/.claude/skills/` をリンクする。`CLAUDE.md` は `~/.codex/AGENTS.md` を読み込むので、
+`codex` パッケージも適用し、共通の方針はそちらに書く。`codex` スキルにより、Claude Code は
+価値があると判断したときに Codex CLI を読み取り専用で呼び、独立したレビューやセカンドオピニオンを得られる。
 
-`settings.json` defaults to Opus 5.5 at medium effort for development on a Pro
-plan and denies reads of common secret locations. When Claude Code usage runs
-out, continue with Codex. Because the file is linked, changes Claude
-Code saves to user settings land in this repository; review them before
-committing. Credentials, sessions, caches, and other runtime state remain unmanaged.
+`settings.json` は Pro プランでの開発向けに既定を Opus 5.5 の medium effort にし、よくある秘密情報の
+場所の読み取りを拒否する。Claude Code の使用量が尽きたら Codex で続ける。ファイルはリンクされているため、
+Claude Code がユーザー設定に保存した変更はこのリポジトリに反映される。コミット前に確認する。
+認証情報、セッション、キャッシュなどの実行時の状態は管理しない。
 
-Windows: see `windows/README.md`.
+Windows については `windows/README.md` を参照。

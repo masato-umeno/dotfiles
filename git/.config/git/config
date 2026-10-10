@@ -21,6 +21,6 @@
 	undo = reset --soft HEAD~1
 	refl = reflog
 
-# Personal identity and machine-specific overrides stay outside dotfiles.
+# 個人の識別情報とマシン固有の上書き設定は dotfiles の外に置く。
 [include]
 	path = ~/.config/git/config.local

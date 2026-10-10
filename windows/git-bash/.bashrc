@@ -1,4 +1,4 @@
-# Git Bash configuration managed by dotfiles.
+# dotfiles で管理する Git Bash の設定。
 
 case $- in
   *i*) ;;
@@ -46,8 +46,8 @@ if command -v zoxide >/dev/null 2>&1; then
     mkdir -p "$ZOXIDE_CACHE_DIR"
     zoxide init bash > "$ZOXIDE_INIT"
 
-    # zoxide 0.10.0 generates an invalid cygpath invocation on Git Bash/MSYS2.
-    # Patch only the affected generated lines; fixed zoxide versions are left unchanged.
+    # zoxide 0.10.0 は Git Bash/MSYS2 で不正な cygpath 呼び出しを生成する。
+    # 該当する生成行だけを修正し、修正済みの zoxide バージョンには手を加えない。
     case "$OSTYPE" in
       msys*|cygwin*)
         sed -i \

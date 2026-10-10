@@ -1,31 +1,31 @@
 
 #--------------------------------------------------------------------------------
-# initialization
+# 初期化
 #---------------------------------------------------------------------------------
 [ -d ./workspace ] && cd workspace
 
 #--------------------------------------------------------------------------------
-# Display
+# 表示
 #--------------------------------------------------------------------------------
-# only show current directory(%~) in prompt
+# プロンプトにはカレントディレクトリ(%~)だけを表示する
 PROMPT='%F{cyan}%1~ %#%f '
-# ls coloring
-# reset -> directory setting 01:Bold 35:Purple
+# ls の色付け
+# リセット -> ディレクトリの設定 01:太字 35:紫
 LS_COLORS='rs=0:di=01;35:';
 export LS_COLORS
 
 #--------------------------------------------------------------------------------
-# History
+# 履歴
 #--------------------------------------------------------------------------------
-# history
-HISTFILE=$HOME/.zsh_history # save log
-HISTSIZE=100000             # size of history in memory
-SAVEHIST=1000000            # size of history in disk(is $HISTFILE)
-# share .zshhistory
-setopt inc_append_history   # append history to the history file immediately, not when the shell exits
-setopt share_history        # share history between all sessions
+# 履歴
+HISTFILE=$HOME/.zsh_history # 保存先
+HISTSIZE=100000             # メモリ上の履歴件数
+SAVEHIST=1000000            # ディスク上の履歴件数($HISTFILE)
+# .zsh_history を共有する
+setopt inc_append_history   # シェル終了時ではなく即座に履歴ファイルへ追記する
+setopt share_history        # すべてのセッションで履歴を共有する
 
-# search command history with Ctrl-R
+# Ctrl-R でコマンド履歴を検索する
 if command -v fzf >/dev/null 2>&1; then
   fzf-history-widget() {
     local selected
@@ -63,36 +63,36 @@ if command -v fzf >/dev/null 2>&1; then
 fi
 
 #--------------------------------------------------------------------------------
-# Complement
+# 補完
 #--------------------------------------------------------------------------------
-# enable completion
+# 補完を有効にする
 autoload -Uz compinit && compinit
-# enable auto-completion
+# 自動補完を有効にする
 setopt auto_cd
-# enable auto-completion for commands
+# コマンドの自動補完を有効にする
 setopt complete_in_word
-# highlight completion candidates
+# 補完候補をハイライトする
 zstyle ':completion:*:default' menu select=1
-# speed up completion by caching
+# キャッシュで補完を高速化する
 zstyle ':completion::complete:*' use-cache true
-# ignore case when completing
-# example: 'ls' and 'LS' are treated the same
+# 補完時に大文字小文字を区別しない
+# 例: 'ls' と 'LS' を同じものとして扱う
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
-# narrow down completion
+# 補完候補を絞り込む
 setopt list_packed
-# ignore duplicates in history
+# 履歴の重複を無視する
 setopt hist_ignore_dups
-# when cd, automatically run ls
+# cd したら自動で ls を実行する
 function chpwd() {
-  # update terminal title
+  # ターミナルのタイトルを更新する
   echo -ne "\033]0;$(pwd | rev | awk -F \/ '{print "/"$1"/"$2}'| rev)\007"
-  # show current directory info
+  # カレントディレクトリの情報を表示する
   print -P "%~"
   ls
 }
 
 #--------------------------------------------------------------------------------
-# Tool Path
+# ツールのパス
 #--------------------------------------------------------------------------------
 
 if command -v direnv >/dev/null 2>&1; then
@@ -104,9 +104,9 @@ if command -v zoxide >/dev/null 2>&1; then
 fi
 
 #--------------------------------------------------------------------------------
-# Alias
+# エイリアス
 #--------------------------------------------------------------------------------
-# easy to use
+# 便利系
 alias ls='ls --color=auto'
 alias ll='ls -l --color=auto'
 alias la='ls -la --color=auto'
@@ -116,14 +116,14 @@ alias ..='cd ../'
 alias ...='cd ../../'
 alias j=z
 
-# select a repository from ghq and return its full path
+# ghq からリポジトリを選び、そのフルパスを返す
 repo_path() {
   local dir
   dir="$(ghq list | fzf)" || return
   printf '%s\n' "$(ghq root)/$dir"
 }
 
-# move to a selected repository, or print the path when used in command substitution
+# 選んだリポジトリへ移動する。コマンド置換で使われた場合はパスを出力する
 repo() {
   local selected_repo_path
   selected_repo_path="$(repo_path)" || return
@@ -142,10 +142,10 @@ repo-code() {
 
 alias rc='repo-code'
 
-# git (aliases via git-alias.sh)
+# git(エイリアスは git-alias.sh 経由)
 alias g='git'
 
-# generate commit messages from the staged diff and split into logical commits
+# ステージ済みの差分からコミットメッセージを生成し、論理的な単位のコミットに分割する
 ai-commit() {
   if ! command -v codex >/dev/null 2>&1; then
     echo "codex: command not found" >&2

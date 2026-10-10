@@ -1,31 +1,28 @@
-# Repository Guidelines
+# リポジトリガイドライン
 
-## Project Structure & Module Organization
+## プロジェクト構成とモジュール
 
-This repository is a dotfiles source of truth managed with GNU Stow. Put files under a top-level Stow package directory, mirroring their target paths below `$HOME`. Manage global macOS packages in the root `Brewfile`, and keep Windows-specific setup under `windows/`.
+このリポジトリは GNU Stow で管理する dotfiles の正本。ファイルはトップレベルの Stow パッケージディレクトリに置き、`$HOME` 以下の配置先パスをそのまま再現する。macOS のグローバルパッケージはルートの `Brewfile` で管理し、Windows 固有のセットアップは `windows/` に置く。
 
-## Build, Test, and Development Commands
+## ビルド、テスト、開発コマンド
 
-- `stow --simulate --target="$HOME" claude codex ghostty ghq git nix vim vscode zed zsh` — preview the default macOS links.
-- `stow --target="$HOME" claude codex ghostty ghq git nix vim vscode zed zsh` — apply the default macOS links.
-- `brew bundle check --file=Brewfile` — check whether Homebrew matches the declarations.
+- `stow --simulate --target="$HOME" claude codex ghostty ghq git nix vim vscode zed zsh` — macOS の既定リンクをプレビューする。
+- `stow --target="$HOME" claude codex ghostty ghq git nix vim vscode zed zsh` — macOS の既定リンクを適用する。
+- `brew bundle check --file=Brewfile` — Homebrew の状態が宣言と一致するか確認する。
 
-There is no build system. Validate changes with a Stow simulation and then reload the target app (e.g., reopen Zed or start a new shell) to confirm expected behavior.
+ビルドシステムはない。変更は Stow のシミュレーションで検証し、対象アプリを再読み込みして(Zed を開き直す、新しいシェルを起動するなど)期待どおり動くか確認する。
 
-## Coding Style & Naming Conventions
+## コーディングスタイルと命名規則
 
-- Keep edits minimal and consistent with existing file styles.
-- Prefer lowercase filenames and conventional dot-config paths (e.g., `app/.config/app/...`).
+- 編集は最小限にし、既存ファイルのスタイルに合わせる。
+- ファイル名は小文字にし、慣例的な dot-config パスを使う(例: `app/.config/app/...`)。
 
-## Testing Guidelines
+## テスト方針
 
-There are no automated tests in this repository. Use the documented Stow simulation as the primary structural check, then perform a lightweight manual check relevant to the change and keep commits scoped to a single, verifiable change.
+自動テストはない。ドキュメント化された Stow シミュレーションを主な構造チェックとし、変更に応じた軽い手動確認を行う。コミットは単一の検証可能な変更にまとめる。
 
-## Notes
+## 注意事項
 
-This repository is intended for public GitHub hosting. Use home-relative paths
-and generic examples; keep personal identities and machine-specific values in
-local files outside the repository and Stow packages. Git ignore rules do not
-exclude files from Stow deployment.
+このリポジトリは GitHub で公開する前提。パスはホーム相対にし、例は汎用的なものにする。個人の識別情報やマシン固有の値は、リポジトリと Stow パッケージの外にあるローカルファイルに置く。Git の ignore ルールは Stow の配置対象から除外しない。
 
-Global agent policies live under `codex/.codex/AGENTS.md`. Keep this file focused on repository-specific guidance.
+グローバルなエージェント方針は `codex/.codex/AGENTS.md` にある。このファイルはリポジトリ固有のガイダンスに絞る。

@@ -1,2 +1,2 @@
-# Never deploy private overrides accidentally placed in this package.
+# このパッケージに誤って置かれた個人用の上書き設定を配置しない。
 config\.local$

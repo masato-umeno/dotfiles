@@ -1,4 +1,4 @@
-# Place this file in the Windows user profile directory (%USERPROFILE%).
+# このファイルは Windows のユーザープロファイルディレクトリ(%USERPROFILE%)に置く。
 
 [wsl2]
 memory=6GB

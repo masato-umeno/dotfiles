@@ -1,10 +1,10 @@
-# Global Working Preferences
+# グローバル作業方針
 
-Shared with Codex so both agents follow the same policy.
+Codex と共有し、両エージェントが同じ方針に従う。
 
 @~/.codex/AGENTS.md
 
 ## Claude Code
 
-- Default to Opus 5.5 at medium effort. Raise effort with `/effort` only for hard design, debugging, or review, and use Sonnet for mechanical bulk edits to conserve plan usage.
-- Keep exploration targeted: read the files that matter instead of sweeping the repository, and avoid spawning subagents unless the task clearly benefits.
+- 既定は Opus 5.5 の medium effort。難しい設計、デバッグ、レビューのときだけ `/effort` で上げ、機械的な一括編集には Sonnet を使ってプランの使用量を節約する。
+- 探索は的を絞る: リポジトリ全体を走査せず必要なファイルを読み、明らかに効果がある場合を除きサブエージェントを起動しない。

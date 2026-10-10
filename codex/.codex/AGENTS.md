@@ -1,38 +1,38 @@
-# Global Working Preferences
+# グローバル作業方針
 
-- Use the user's language for conversation and the project's language and style for repository content.
-- Lead with outcomes and blockers. Keep progress and failure excerpts concise, and state assumptions that materially affect behavior, data, security, cost, or scope.
-- Never read or expose `.env` files, credentials, private keys, or credential-bearing URLs unless the user explicitly identifies the exact file and requests it. Prefer documented examples and non-secret placeholders.
-- Preserve unrelated changes. Resolve destructive targets first and prefer reversible actions.
-- For non-trivial work, give a short outcome-oriented plan, make the smallest coherent change, and verify it through documented project entry points in proportion to risk.
-- Continue through actionable failures while each attempt adds evidence. Stop when failures repeat unchanged or progress requires credentials, a consequential user choice, or broader authority.
-- Do not commit, push, open or merge a pull request, publish a release, or change repository settings unless the user requests that workflow. Never merge or release without explicit authorization.
+- 会話はユーザーの言語で行い、リポジトリ内のコンテンツはそのプロジェクトの言語とスタイルに合わせる。
+- 結果とブロッカーを先に伝える。進捗や失敗の抜粋は簡潔にし、挙動、データ、セキュリティ、コスト、スコープに大きく影響する前提は明示する。
+- ユーザーが対象ファイルを明示して要求しない限り、`.env` ファイル、認証情報、秘密鍵、認証情報を含む URL を読んだり露出したりしない。ドキュメント化された例や秘密でないプレースホルダーを優先する。
+- 無関係な変更は保持する。破壊的な操作は対象を先に特定し、元に戻せる操作を優先する。
+- 自明でない作業では、結果を軸にした短い計画を示し、筋の通った最小の変更を行い、リスクに見合う範囲でプロジェクトの正規の手順で検証する。
+- 試行ごとに新しい手がかりが得られる限り、対処可能な失敗は続けて解決する。同じ失敗が変化なく繰り返されるとき、または認証情報、重要なユーザー判断、より広い権限が必要なときは止める。
+- ユーザーが求めない限り、コミット、プッシュ、プルリクエストの作成やマージ、リリースの公開、リポジトリ設定の変更をしない。明示的な許可なしにマージやリリースをしない。
 
-## Long-running work and computer use
+## 長時間の作業とコンピューター操作
 
-- Treat commands expected to run for about 10 minutes or longer as long-running work. This includes builds, tests, monitoring, network operations, and other tasks that could be interrupted by system sleep.
-- For a long-running CLI command, bind the sleep-prevention assertions to the command so they are released when it exits:
+- 10 分程度以上かかりそうなコマンドは長時間作業として扱う。ビルド、テスト、監視、ネットワーク操作など、システムのスリープで中断されうる作業が含まれる。
+- 長時間の CLI コマンドでは、スリープ防止をコマンドに紐づけ、終了時に解除されるようにする:
 
   ```sh
   caffeinate -dis <command>
   ```
 
-- For multiple shell operations, wrap the complete sequence in a shell command so the assertions cover the whole sequence and are released when it finishes:
+- 複数のシェル操作を行う場合は、一連の処理全体をシェルコマンドで包み、全体を対象にして終了時に解除されるようにする:
 
   ```sh
   caffeinate -dis sh -c '<commands>'
   ```
 
-- When using computer use for browser or GUI work that is expected to take about 10 minutes or longer, or that includes uploads, downloads, external-service waits, monitoring, generation, or export operations, start a timed assertion before the interaction begins:
+- ブラウザや GUI のコンピューター操作が 10 分程度以上かかりそうな場合、またはアップロード、ダウンロード、外部サービスの待機、監視、生成、エクスポートを含む場合は、操作を始める前に時間指定のスリープ防止を開始する:
 
   ```sh
   caffeinate -dis -t <timeout-seconds> >/dev/null 2>&1 &
   ```
 
-- Choose a timeout with enough margin for the expected interaction. Let the timed assertion expire naturally after the work, and renew it if the work continues. Do not use it for short searches, a few clicks, or other interactions that finish promptly.
-- Do not start `caffeinate` without a command or timeout for unattended work, because it would require manual cleanup. The `-u` option is for a brief user-activity assertion and is not a substitute for continuous sleep prevention; use `-dis` for these workflows.
+- タイムアウトは想定される操作時間に十分な余裕を持たせる。作業後は自然に期限切れにし、作業が続く場合は更新する。短い検索や数回のクリックなど、すぐ終わる操作には使わない。
+- 無人の作業でコマンドもタイムアウトも指定せずに `caffeinate` を起動しない。手動で後始末が必要になるため。`-u` は短時間のユーザー操作アサーション用で、継続的なスリープ防止の代わりにはならない。これらの作業では `-dis` を使う。
 
-## Repository workflow with GHQ
+## GHQ によるリポジトリ管理
 
-- Use GHQ for repository acquisition, discovery, and location: prefer `ghq get`, `ghq list`, `ghq list -p`, and `ghq root`.
-- Use Git for version-control operations such as `status`, `diff`, branch management, commits, and history inspection. GHQ is not a full replacement for Git.
+- リポジトリの取得、探索、場所の特定には GHQ を使う: `ghq get`、`ghq list`、`ghq list -p`、`ghq root` を優先する。
+- `status`、`diff`、ブランチ管理、コミット、履歴の確認などのバージョン管理操作には Git を使う。GHQ は Git の完全な代わりではない。

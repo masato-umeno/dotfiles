@@ -1,10 +1,9 @@
-# Windows setup
+# Windows のセットアップ
 
-Windows setup uses **winget as the default package manager**. Scoop is kept only
-for developer CLI tools that are convenient to use from Git Bash. Chocolatey is
-not required.
+Windows のセットアップは **winget を既定のパッケージマネージャー**として使う。Scoop は Git Bash から
+使うと便利な開発者向け CLI ツールのためだけに残している。Chocolatey は不要。
 
-Prerequisite: `winget` (App Installer) must be available.
+前提: `winget`(アプリ インストーラー)が使えること。
 
 ```powershell
 Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
@@ -12,8 +11,8 @@ cd $HOME\dotfiles
 .\windows\bootstrap.ps1
 ```
 
-The bootstrap installs regular Windows applications with winget, including Git
-for Windows, and installs these CLI tools with Scoop:
+bootstrap は Git for Windows を含む通常の Windows アプリを winget でインストールし、次の CLI ツールを
+Scoop でインストールする:
 
 - `direnv`
 - `fzf`
@@ -21,16 +20,14 @@ for Windows, and installs these CLI tools with Scoop:
 - `jq`
 - `zoxide`
 
-A5:SQL Mk-2 is installed from Microsoft Store through winget. Microsoft Store
-sign-in may be required.
+A5:SQL Mk-2 は winget 経由で Microsoft Store からインストールする。Microsoft Store へのサインインが
+必要な場合がある。
 
-Git Bash settings are copied from `windows/git-bash/` to `~/.bashrc` and
-`~/.bash_profile`. Those files are managed by this repository and are
-overwritten when the bootstrap is run again.
+Git Bash の設定は `windows/git-bash/` から `~/.bashrc` と `~/.bash_profile` にコピーされる。これらの
+ファイルはこのリポジトリで管理しており、bootstrap を再実行すると上書きされる。
 
-The Git Bash configuration intentionally stays lightweight. It provides the
-common aliases and repository helpers from the zsh setup, zoxide/direnv
-integration, fzf history search on Ctrl-R, Docker Compose aliases, and the
-`ai-commit` helper without adding a shell framework.
+Git Bash の設定は意図的に軽量にしている。シェルフレームワークを追加せずに、zsh 環境と共通の
+エイリアスとリポジトリ用ヘルパー、zoxide/direnv の連携、Ctrl-R での fzf 履歴検索、Docker Compose の
+エイリアス、`ai-commit` ヘルパーを提供する。
 
-Reopen PowerShell and Git Bash after running the bootstrap.
+bootstrap の実行後は PowerShell と Git Bash を開き直す。

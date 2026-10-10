@@ -1,11 +1,11 @@
-# Personal settings and environment files must stay machine-local.
+# 個人設定と環境ファイルはマシンローカルに置く。
 /git/.config/git/config.local
 .env
 .env.*
 !.env.example
 !.env.template
 
-# Keep Codex runtime/generated files out of this repo.
+# Codex の実行時ファイルや生成物はリポジトリに含めない。
 codex/.codex/.codex-global-state.json*
 codex/.codex/.personality_migration
 codex/.codex/ambient-suggestions/
@@ -32,7 +32,7 @@ codex/.codex/*.sqlite*
 codex/.codex/*.tmp
 codex/.codex/*.lock
 
-# Keep Claude Code runtime/generated files out of this repo.
+# Claude Code の実行時ファイルや生成物はリポジトリに含めない。
 claude/.claude/.credentials.json
 claude/.claude/projects/
 claude/.claude/sessions/
