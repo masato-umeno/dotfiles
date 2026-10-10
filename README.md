@@ -125,9 +125,9 @@ plugins, caches, logs, sessions, and other runtime state remain machine-local.
 
 ### Model and usage
 
-On a ChatGPT Plus plan, default to `gpt-6-luna` with `medium` reasoning and
-`high` for plan mode in the machine-local `~/.codex/config.toml`. Switch to a
-larger model with `/model` only for hard tasks.
+On a ChatGPT Plus plan, default to `gpt-6-sol` with `medium` reasoning and
+`high` for plan mode in the machine-local `~/.codex/config.toml`. Switch to
+`gpt-6-luna` for light tasks or `gpt-6-astra` for hard tasks with `/model`.
 
 ## Claude Code
 
