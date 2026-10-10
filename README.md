@@ -137,8 +137,9 @@ The `claude` Stow package links `~/.claude/CLAUDE.md`,
 there. The `git-commit-messages` skill is shared with Codex through a relative
 symlink.
 
-`settings.json` defaults to Sonnet to fit a Pro plan's usage limits and denies
-reads of common secret locations. Because the file is linked, changes Claude
+`settings.json` defaults to Opus 5.5 at medium effort for development on a Pro
+plan and denies reads of common secret locations. When Claude Code usage runs
+out, continue with Codex. Because the file is linked, changes Claude
 Code saves to user settings land in this repository; review them before
 committing. Credentials, sessions, caches, and other runtime state remain unmanaged.
 
