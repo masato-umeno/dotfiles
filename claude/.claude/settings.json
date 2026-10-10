@@ -7,7 +7,12 @@
     }
   },
   "permissions": {
+    "allow": [
+      "Bash(codex exec -s read-only:*)",
+      "Bash(codex exec review:*)"
+    ],
     "deny": [
+      "Bash(codex *--dangerously-bypass-approvals-and-sandbox*)",
       "Read(./.env)",
       "Read(./.env.*)",
       "Read(~/.ssh/**)",

@@ -131,7 +131,8 @@ On a ChatGPT Plus plan, default to `gpt-6-sol` with `medium` reasoning and
 The `claude` Stow package links `~/.claude/CLAUDE.md`,
 `~/.claude/settings.json`, and `~/.claude/skills/`. `CLAUDE.md` imports
 `~/.codex/AGENTS.md`, so apply the `codex` package too and keep shared policy
-there.
+there. The `codex` skill lets Claude Code consult the Codex CLI read-only for
+independent reviews or second opinions when that adds value.
 
 `settings.json` defaults to Opus 5.5 at medium effort for development on a Pro
 plan and denies reads of common secret locations. When Claude Code usage runs
