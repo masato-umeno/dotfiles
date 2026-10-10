@@ -10,6 +10,8 @@ brew "zoxide"
 
 cask "brave-browser"
 cask "chatgpt"
+cask "claude"
+cask "claude-code"
 cask "codex"
 cask "codex-app"
 cask "discord"

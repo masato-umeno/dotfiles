@@ -12,7 +12,7 @@ environments defined by each project repository.
 Prerequisite: GNU Stow. Run from the root of this repository checkout.
 
 ```shell
-packages=(codex ghostty ghq git nix vim vscode zed zsh)
+packages=(claude codex ghostty ghq git nix vim vscode zed zsh)
 stow --simulate --target="$HOME" "${packages[@]}"
 stow --target="$HOME" "${packages[@]}"
 ```
@@ -80,6 +80,8 @@ Each top-level package mirrors its paths below `$HOME`:
 
 - `zsh/.zshrc` becomes `~/.zshrc`.
 - `git/.config/git/config` becomes `~/.config/git/config`.
+- `claude/.claude/` contributes global Claude Code guidance, settings, and
+  skills.
 - `codex/.codex/` contributes global Codex guidance, while
   `codex/.agents/skills/` contributes personal skills. Runtime files, caches,
   secrets, and learned state remain unmanaged.
@@ -120,5 +122,24 @@ mode.
 Global instructions live in `~/.codex/AGENTS.md`. Personal reusable skills live
 in `~/.agents/skills/`. Learned command rules, app settings, authentication,
 plugins, caches, logs, sessions, and other runtime state remain machine-local.
+
+### Model and usage
+
+On a ChatGPT Plus plan, default to `gpt-6-luna` with `medium` reasoning and
+`high` for plan mode in the machine-local `~/.codex/config.toml`. Switch to a
+larger model with `/model` only for hard tasks.
+
+## Claude Code
+
+The `claude` Stow package links `~/.claude/CLAUDE.md`,
+`~/.claude/settings.json`, and `~/.claude/skills/`. `CLAUDE.md` imports
+`~/.codex/AGENTS.md`, so apply the `codex` package too and keep shared policy
+there. The `git-commit-messages` skill is shared with Codex through a relative
+symlink.
+
+`settings.json` defaults to Sonnet to fit a Pro plan's usage limits and denies
+reads of common secret locations. Because the file is linked, changes Claude
+Code saves to user settings land in this repository; review them before
+committing. Credentials, sessions, caches, and other runtime state remain unmanaged.
 
 Windows: see `windows/README.md`.
