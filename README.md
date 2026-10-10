@@ -82,8 +82,7 @@ Each top-level package mirrors its paths below `$HOME`:
 - `git/.config/git/config` becomes `~/.config/git/config`.
 - `claude/.claude/` contributes global Claude Code guidance, settings, and
   skills.
-- `codex/.codex/` contributes global Codex guidance, while
-  `codex/.agents/skills/` contributes personal skills. Runtime files, caches,
+- `codex/.codex/` contributes global Codex guidance. Runtime files, caches,
   secrets, and learned state remain unmanaged.
 - `vscode/Library/Application Support/Code/User/settings.json` targets the
   macOS VS Code settings path.
@@ -108,8 +107,7 @@ Clone with `ghq get`, then move to a repo under `$(ghq root)`.
 
 ## Codex
 
-The `codex` Stow package links global guidance into `~/.codex/` and personal
-skills into `~/.agents/skills/`. Runtime files, caches, secrets, and
+The `codex` Stow package links global guidance into `~/.codex/`. Runtime files, caches, secrets, and
 machine-local Codex state stay unmanaged.
 
 ### Permissions and managed files
@@ -119,8 +117,7 @@ Start with the workspace boundary and choose broader permissions per task only
 when the work requires them. Use `/permissions` to inspect or change the active
 mode.
 
-Global instructions live in `~/.codex/AGENTS.md`. Personal reusable skills live
-in `~/.agents/skills/`. Learned command rules, app settings, authentication,
+Global instructions live in `~/.codex/AGENTS.md`. Learned command rules, app settings, authentication,
 plugins, caches, logs, sessions, and other runtime state remain machine-local.
 
 ### Model and usage
@@ -134,8 +131,7 @@ On a ChatGPT Plus plan, default to `gpt-6-sol` with `medium` reasoning and
 The `claude` Stow package links `~/.claude/CLAUDE.md`,
 `~/.claude/settings.json`, and `~/.claude/skills/`. `CLAUDE.md` imports
 `~/.codex/AGENTS.md`, so apply the `codex` package too and keep shared policy
-there. The `git-commit-messages` skill is shared with Codex through a relative
-symlink.
+there.
 
 `settings.json` defaults to Opus 5.5 at medium effort for development on a Pro
 plan and denies reads of common secret locations. When Claude Code usage runs
