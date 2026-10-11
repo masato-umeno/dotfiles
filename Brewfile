@@ -3,6 +3,7 @@ brew "fzf"
 brew "gh"
 brew "ghq"
 brew "git"
+brew "mise"
 brew "ollama", restart_service: true
 brew "ripgrep"
 brew "stow"

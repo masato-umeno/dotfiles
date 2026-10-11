@@ -11,7 +11,7 @@ dotfiles の正本。編集はこのリポジトリのチェックアウトで�
 前提: GNU Stow。このリポジトリのチェックアウトのルートで実行する。
 
 ```shell
-packages=(claude codex ghostty ghq git nix vim vscode zed zsh)
+packages=(claude codex ghostty ghq git mise nix vim vscode zed zsh)
 stow --simulate --target="$HOME" "${packages[@]}"
 stow --target="$HOME" "${packages[@]}"
 ```

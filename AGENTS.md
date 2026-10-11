@@ -6,8 +6,8 @@
 
 ## ビルド、テスト、開発コマンド
 
-- `stow --simulate --target="$HOME" claude codex ghostty ghq git nix vim vscode zed zsh` — macOS の既定リンクをプレビューする。
-- `stow --target="$HOME" claude codex ghostty ghq git nix vim vscode zed zsh` — macOS の既定リンクを適用する。
+- `stow --simulate --target="$HOME" claude codex ghostty ghq git mise nix vim vscode zed zsh` — macOS の既定リンクをプレビューする。
+- `stow --target="$HOME" claude codex ghostty ghq git mise nix vim vscode zed zsh` — macOS の既定リンクを適用する。
 - `brew bundle check --file=Brewfile` — Homebrew の状態が宣言と一致するか確認する。
 
 ビルドシステムはない。変更は Stow のシミュレーションで検証し、対象アプリを再読み込みして(Zed を開き直す、新しいシェルを起動するなど)期待どおり動くか確認する。
