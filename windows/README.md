@@ -31,3 +31,21 @@ Git Bash の設定は意図的に軽量にしている。シェルフレーム�
 エイリアス、`ai-commit` ヘルパーを提供する。
 
 bootstrap の実行後は PowerShell と Git Bash を開き直す。
+
+## Node / Python(mise + uv)
+
+ランタイムのバージョンは mise、Python のパッケージと venv は uv で管理する。どちらも winget で入る。
+
+- グローバル設定は `windows/mise/config.toml` から `~/.config/mise/config.toml` にコピーされる
+  (Node は LTS、Python は 3.13)。macOS 用の `mise/` パッケージとは別に持つ。
+- `%LOCALAPPDATA%\mise\shims` を User PATH の先頭に追加する。シェルの activate ではなく shims を使うので、
+  VS Code や Unity などシェルを経由しないアプリからも同じ node / python が見える。
+- プロジェクトごとのバージョンは `mise use node@22` などで `mise.toml` に書く。
+- Python のプロジェクトでは `uv init` / `uv add` / `uv run`、CLI ツールは `uv tool install` を使う。
+  uv は mise が入れた Python を見つけて使う。
+- 更新は `winget upgrade jdx.mise` / `winget upgrade astral-sh.uv`(`mise self-update` は使わない)。
+
+手動で片付けるもの:
+
+- nvm-windows / pyenv-win が入っていればアンインストールし、User PATH と `NVM_HOME` / `NVM_SYMLINK` を消す。
+- 「設定 → アプリ → アプリ実行エイリアス」で `python.exe` / `python3.exe` をオフにする(任意)。
