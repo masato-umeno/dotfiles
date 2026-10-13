@@ -1,3 +1,5 @@
+tap "stablyai/orca"
+
 brew "direnv"
 brew "fzf"
 brew "gh"
@@ -25,6 +27,7 @@ cask "microsoft-teams"
 cask "obsidian"
 cask "powershell"
 cask "scroll-reverser"
+cask "stablyai/orca/orca"
 cask "unity-hub"
 cask "visual-studio-code"
 cask "zed"
