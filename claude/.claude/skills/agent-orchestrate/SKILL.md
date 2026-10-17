@@ -13,7 +13,7 @@ Claude（指揮者）は **計画・依頼文・レビュー・つなぎ** だ�
    1. `.agents/agent-orchestrate.md`（このスキル向けの上書き設定。あれば最優先）
    2. AGENTS.md、CLAUDE.md、CONTRIBUTING.md、タスク管理のドキュメント
 
-   上書き設定に書かれ得る項目：PR を向けるブランチ、カンバン（owner・Project 番号・列名）、タスクの優先順と回さない条件、同時に動かす数と重いツールの上限、クラウドの環境と回してよい Issue、判断を仰ぐ相手、ワーカーに渡す追加ルール、既知の落とし穴。書かれていない項目は、このスキルの既定値を使う。
+   上書き設定に書かれ得る項目：PR を向けるブランチ、カンバン（owner・Project 番号・列名）、タスクの優先順と回さない条件、同時に動かす数と重いツールの上限、クラウドの環境と回してよい Issue、無料で使えるモデルとその期限、判断を仰ぐ相手、ワーカーに渡す追加ルール、既知の落とし穴。書かれていない項目は、このスキルの既定値を使う。
 2. `bash ~/.claude/skills/agent-orchestrate/scripts/budget.sh` で Codex の残り枠を見る（5 時間枠と週の枠）。
 3. `orca worktree ps` で、今動いているワーカーと残っている古いワークツリーを把握する。
    - `orca worktree list` で、コメントに「中断」と書かれたワークツリーを探す。あれば、書かれている session id を使って `codex exec resume` で先に再開する（新しいタスクより優先する）。
@@ -109,6 +109,8 @@ orca orchestration check --wait --types "worker_done,escalation,question" --time
 
 `worker-start` が失敗したときは、再実行する前に Orca の `orchestration` スキル（`orca skills get orchestration`）の復旧手順を読む。質問が来たら `orchestration reply` で答える。
 
+Codex 以外のワーカー（opencode など）の起動のしかたは `references/agents/<エージェント名>.md` にある。無料のモデルで回せる Issue は、opencode に回すことを考える（`references/agents/opencode.md`）。
+
 **予備：`codex exec`**（Orca の監督つきワーカーが使えないときだけ使う）
 
 ```bash
@@ -141,7 +143,7 @@ bash ~/.claude/skills/agent-orchestrate/scripts/resume.sh <ワークツリーの
    - CI、ビルド、データ形式、共通基盤
    - 30 行を超えるロジックの変更
    - ワーカーが「確認できなかった」と書いている
-3. 大きい差分は自分で読まず、安いモデルに「読むだけ」のレビューをさせる（`codex review`、または無料・安価なモデルが使える別の CLI）。依頼文で「編集・commit はしない、正しさのバグだけ、重大度・ファイル:行・起きる手順で」と指定する。指摘はそのまま信じず、該当箇所を自分で読んで本当か確かめてから直させる。無料の窓口は落ちたり応答しなくなったりするので、タイムアウトを付ける。
+3. 大きい差分は自分で読まず、安いモデルに「読むだけ」のレビューをさせる（`codex review`、または無料・安価なモデルが使える別の CLI。opencode の呼び方は `references/agents/opencode.md`）。依頼文で「編集・commit はしない、正しさのバグだけ、重大度・ファイル:行・起きる手順で」と指定する。指摘はそのまま信じず、該当箇所を自分で読んで本当か確かめてから直させる。無料の窓口は落ちたり応答しなくなったりするので、タイムアウトを付ける。
 4. 直してほしい点は、**同じセッションを続けて** 頼む。こうすると文脈が残っていて安くつく。
    - 監督つきワーカー：`orca orchestration send` で伝える
    - サンドボックスなし：`resume.sh` で伝える
