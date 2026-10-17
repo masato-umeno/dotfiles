@@ -109,7 +109,7 @@ orca orchestration check --wait --types "worker_done,escalation,question" --time
 
 `worker-start` が失敗したときは、再実行する前に Orca の `orchestration` スキル（`orca skills get orchestration`）の復旧手順を読む。質問が来たら `orchestration reply` で答える。
 
-Codex 以外のワーカー（opencode など）の起動のしかたは `references/agents/<エージェント名>.md` にある。無料のモデルで回せる Issue は、opencode に回すことを考える（`references/agents/opencode.md`）。
+Codex 以外のワーカー（opencode など）の起動のしかたは `references/agents/<エージェント名>.md` にある。無料のモデルで回せる Issue は、opencode に回すことを考える（`references/agents/opencode.md`）。opencode で使うモデルは上書き設定かユーザーの指示に従い、指定がなければ無料のモデルだけ使う。
 
 **予備：`codex exec`**（Orca の監督つきワーカーが使えないときだけ使う）
 
@@ -143,7 +143,7 @@ bash ~/.claude/skills/agent-orchestrate/scripts/resume.sh <ワークツリーの
    - CI、ビルド、データ形式、共通基盤
    - 30 行を超えるロジックの変更
    - ワーカーが「確認できなかった」と書いている
-3. 大きい差分は自分で読まず、安いモデルに「読むだけ」のレビューをさせる（`codex review`、または無料・安価なモデルが使える別の CLI。opencode の呼び方は `references/agents/opencode.md`）。依頼文で「編集・commit はしない、正しさのバグだけ、重大度・ファイル:行・起きる手順で」と指定する。指摘はそのまま信じず、該当箇所を自分で読んで本当か確かめてから直させる。無料の窓口は落ちたり応答しなくなったりするので、タイムアウトを付ける。
+3. 大きい差分は自分で読まず、安いモデルに「読むだけ」のレビューをさせる（`codex review`、または無料・安価なモデルが使える別の CLI。opencode の呼び方は `references/agents/opencode.md`。opencode のモデルは上書き設定かユーザーの指示に従い、指定がなければ無料のモデルだけ）。依頼文で「編集・commit はしない、正しさのバグだけ、重大度・ファイル:行・起きる手順で」と指定する。指摘はそのまま信じず、該当箇所を自分で読んで本当か確かめてから直させる。無料の窓口は落ちたり応答しなくなったりするので、タイムアウトを付ける。
 4. 直してほしい点は、**同じセッションを続けて** 頼む。こうすると文脈が残っていて安くつく。
    - 監督つきワーカー：`orca orchestration send` で伝える
    - サンドボックスなし：`resume.sh` で伝える
