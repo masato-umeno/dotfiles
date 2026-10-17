@@ -7,7 +7,7 @@
 set -euo pipefail
 owner="$1"; project="$2"; num="$3"; status="$4"; field="${5:-Status}"
 
-cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/codex-orchestrate"
+cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/agent-orchestrate"
 cache="$cache_dir/kanban-$owner-$project-$field.tsv"
 if [ ! -s "$cache" ]; then
   mkdir -p "$cache_dir"

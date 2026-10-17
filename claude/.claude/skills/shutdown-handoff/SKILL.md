@@ -32,7 +32,7 @@ bash ~/.claude/skills/shutdown-handoff/scripts/inventory.sh
 
 ## 3. 引き継ぎを残す
 
-止めたワーカー・作業途中のワークツリーごとに、Orca のコメントに次を書く。コメントは `codex-orchestrate` の手順 0 が「中断」という語で探すので、必ず含める。
+止めたワーカー・作業途中のワークツリーごとに、Orca のコメントに次を書く。コメントは `agent-orchestrate` の手順 0 が「中断」という語で探すので、必ず含める。
 
 ```bash
 orca worktree set --worktree <selector> --comment "中断（<理由>）。codex exec resume <session id>（<モデル> <effort>）。残り：<残りの作業を 1 行で>"
