@@ -27,7 +27,7 @@ Claude（指揮者）は **計画・依頼文・レビュー・つなぎ** だ�
 3. `orca worktree ps` で、今動いているワーカーと残っている古いワークツリーを把握する。
    - `orca worktree list` で、コメントに「中断」と書かれたワークツリーを探す。あれば、書かれている session id を使って `codex exec resume` で先に再開する（新しいタスクより優先する）。
    - ワーカーを中断するとき（枠の上限、PC を閉じるなど）は、`orca worktree set --comment` に session id・モデル・残りの作業を書き残す。
-   - 端末を閉じる・ワークツリーを消すのは **操作者に確認してから**。未コミットの変更があるワークツリーは消さない。
+   - 端末を閉じる・ワークツリーを消すのは **操作者に確認してから**。未コミットの変更があるワークツリーは消さない。使わないワークツリーが溜まっていたら、手順 6 で片付ける。
 4. 次の許可ルールがない場合は、操作者に追加を頼む（なければ起動が拒否される）。
    `Bash(codex exec *)`、`Bash(orca orchestration *)`、`Bash(orca worktree create *)`
    サンドボックスなしで動かす場合（3 を参照）は `Bash(bash ~/.claude/skills/agent-orchestrate/scripts/start.sh *)`、`Bash(bash ~/.claude/skills/agent-orchestrate/scripts/resume.sh *)` も、クラウドに回す場合（1 を参照）は `Bash(codex cloud *)` も要る。
@@ -166,7 +166,7 @@ bash ~/.claude/skills/agent-orchestrate/scripts/resume.sh <ワークツリーの
      `codex exec resume -c sandbox_workspace_write.network_access=true -c "sandbox_workspace_write.writable_roots=[\"$(git rev-parse --path-format=absolute --git-common-dir)\"]" -o <結果ファイル> <session id> "<指摘>"`
      resume には `-C`・`--approve-for-me`・`--add-dir` が使えない。この 2 つの `-c` を付けないと、commit も push もできない。
 5. 問題なければ、カンバンをレビュー待ちの列に動かす。上書き設定が許していれば、指揮者が PR をマージしてよい。マージしたら、統合先のブランチの最新でテストを回す（別々に作った変更が組み合わさって壊れていないか）。許していなければ、マージは操作者がする。指揮を別のセッションに頼まれた子は、マージを親に回す（「指揮を別のセッションに頼むとき」）。
-6. 終わったワーカーは片付ける（`worker-release`）。ワークツリーの削除は、PR がマージされたあと、操作者に確認してから行う。
+6. 終わったワーカーは片付ける（`worker-release`）。ワークツリーの削除は、PR がマージされたあと、手順 6 のやり方で操作者に確認してから行う。
 7. 段階表の「実績」に 1 行足す（日付、リポジトリ、Issue の種類、エージェント・モデル、結果、止まった理由）。うまくいかずに段を上げたときも、上げる前のモデルの分を書く。段階表がなければ作らず、最後の報告に書く。
 
 ## 5. 回し続ける
@@ -177,6 +177,25 @@ bash ~/.claude/skills/agent-orchestrate/scripts/resume.sh <ワークツリーの
   - 人の判断や素材がないと進まない Issue しか残っていない
   - 同じ Issue で 2 回直させても直らない
 - 報告は短くする。Issue ごとに、PR、状態、残った懸念、操作者にしてほしいこと（マージ・片付け・許可）を書く。手順 0 で閉じたアプリも書く。
+
+## 6. 使わないワークツリーを片付ける
+
+Orca の一覧には、終わったワーカーのワークツリーが溜まる。指揮を始めるとき（手順 0 の 3）、マージ待ちが片付いたとき、指揮を終えるときに片付ける。
+
+1. **一覧を作る。** `orca worktree list` と `git worktree list`（Orca の外で作られたものも含む）で、ワークツリーごとに次を見る。
+   - 未コミットの変更：`git -C <パス> status --porcelain`
+   - ブランチが統合先に入っているか：`git -C <パス> rev-list --count origin/<base>..HEAD` が 0
+   - 紐づく Issue・PR の状態：`gh issue view`／`gh pr view`
+   - 開いている端末：`orca worktree ps` の `live`
+2. **分ける。**
+   - 消してよい：PR がマージ済みか Issue が閉じていて、未コミットの変更がなく、端末を使っていないもの。中身が空で、Orca の一覧に名前だけ残っているものも含む。
+   - 残す：作業中・レビュー待ちのもの、コメントに「中断」とあるもの、指揮者の端末、操作者が使っていそうなもの（端末が開いている、ワーカーの名前でない）、未コミットの変更があるもの。
+   - git が無視するファイル（スクリーンショットなどの成果物）が残っているものは、それも消えることを書き添える。
+3. **一覧を操作者に見せて、確認してから消す。** 上書き設定で任されていても、未コミットの変更があるものは消さない。
+4. **消す。** `orca worktree rm --worktree path:<パス>`（成果物が残っているものは `--force`）。
+   - Orca から外れても、git の登録やフォルダが残ることがある（ゲームエンジンのキャッシュなど大きいフォルダや、Windows でパスが長すぎるファイル（`Filename too long`）を消しきれないとき）。`git worktree list` で残りを確かめ、`git worktree remove --force <パス>` と `git worktree prune` で外す。
+   - それでも残ったフォルダは、パスを確かめてから消す。変数で組んだパスを `rm -rf` に渡すときは `"${W:?}/${n:?}"` の形にする（空の変数で上の階層を消さないため。この形でないと Claude Code の安全チェックで止められる）。中身が空のフォルダは `rmdir` で消す。
+5. 消したものと残したもの（理由つき）を報告に書く。
 
 ## 気をつけること
 
