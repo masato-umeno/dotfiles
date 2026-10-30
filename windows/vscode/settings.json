@@ -27,7 +27,7 @@
     "diffEditor.ignoreTrimWhitespace": false,
     "docker.extension.enableComposeLanguageServer": false,
     "typescript.updateImportsOnFileMove.enabled": "always",
-    "workbench.colorTheme": "Noctis Azureus",
+    "workbench.colorTheme": "Dracula Theme",
     "editor.renderWhitespace": "all",
     "github.copilot.enable": {
         "*": true
