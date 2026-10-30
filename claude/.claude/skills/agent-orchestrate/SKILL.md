@@ -31,7 +31,7 @@ Codex に実装を回すのは、操作者が明示的に頼んだときだけ�
    2. AGENTS.md、CLAUDE.md、CONTRIBUTING.md、タスク管理のドキュメント
 
    上書き設定に書かれ得る項目：PR を向けるブランチ、カンバン（owner・Project 番号・列名）、タスクの優先順と回さない条件、同時に動かす数と重いツールの上限、クラウドの環境と回してよい Issue、このリポジトリで使ってよいエージェントとモデル（段階表より優先する）、判断を仰ぐ相手、ワーカーに渡す追加ルール、既知の落とし穴。書かれていない項目は、このスキルの既定値を使う。
-2. **段階表と利用枠を見る。** 段階表は `~/.config/agent-orchestrate/models.md`（コストと実力の段階、課金状況、実績）。ない、更新日が 14 日より前、または課金を変えたと聞いたときは、操作者に `agent-models-refresh` を勧める（待たずに、今の段階表か手順 2 の既定で進めてよい）。レビューに Codex を使うので、`bash ~/.claude/skills/agent-orchestrate/scripts/budget.sh` で残り枠を見る（5 時間枠と週の枠）。
+2. **段階表と利用枠を見る。** 段階表は `~/.config/agent-orchestrate/models.md`（コストと実力の段階、課金状況、実績）。先に `bash ~/.claude/skills/agent-orchestrate/scripts/check-models.sh` を走らせる。「要調査: はい」なら、操作者に聞かずに `agent-models-refresh` の「自動で調べるとき」を行う。調べている間は待たずに、今の段階表で進めてよい。課金を変えたと聞いたときは、操作者に `agent-models-refresh` の全体を勧める。レビューに Codex を使うので、`bash ~/.claude/skills/agent-orchestrate/scripts/budget.sh` で残り枠を見る（5 時間枠と週の枠）。
 3. `orca worktree ps` で、今動いているワーカーと残っている古いワークツリーを把握する。
    - `orca worktree list` で、コメントに「中断」と書かれたワークツリーを探す。あれば、書かれている session id を使って、そのエージェントのやり方（opencode は `opencode run -s <session id>`、Codex は `codex exec resume`）で先に再開する（新しいタスクより優先する）。
    - ワーカーを中断するとき（枠の上限、PC を閉じるなど）は、`orca worktree set --comment` に session id・モデル・残りの作業を書き残す。

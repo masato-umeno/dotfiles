@@ -3,6 +3,7 @@
 agent-orchestrate が読み、agent-models-refresh が更新する。リポジトリには入れない。
 
 更新日：YYYY-MM-DD
+調査日：YYYY-MM-DD
 
 ## 課金状況
 
@@ -26,6 +27,13 @@ agent-orchestrate が読み、agent-models-refresh が更新する。リポジ�
 | 実装 | opencode | （例：DeepSeek の Pro） | | | |
 | レビュー | Codex | （例：安いモデル） | 読むだけのレビュー | | |
 | レビュー | Codex | （例：上位のモデル） | 差分が大きい、共通基盤を変える PR | | |
+
+## 候補と見送り
+
+調べたが段に置いていないモデル。`check-models.sh` は、段階表に名前のあるモデルを調査済みとして扱う。
+
+| モデル | 判断 | 理由・条件 | 出典 | 調べた日 |
+|---|---|---|---|---|
 
 ## 実績
 
