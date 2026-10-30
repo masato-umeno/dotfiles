@@ -124,8 +124,11 @@ reasoning を `medium`、plan モードを `high` にする。軽い作業は `g
 `codex` パッケージも適用し、共通の方針はそちらに書く。`codex` スキルにより、Claude Code は
 価値があると判断したときに Codex CLI を読み取り専用で呼び、独立したレビューやセカンドオピニオンを得られる。
 
+開発の分担は、全体管理が Opus 5.5、実装が DeepSeek のモデル、レビューが Codex。Codex の指摘を直すかどうかは
+Opus が決める。詳しくは `~/.codex/AGENTS.md` と `agent-orchestrate` スキルに書いている。
+
 `settings.json` は Pro プランでの開発向けに既定を Opus 5.5 の medium effort にし、よくある秘密情報の
-場所の読み取りを拒否する。Claude Code の使用量が尽きたら Codex で続ける。ファイルはリンクされているため、
+場所の読み取りを拒否する。ファイルはリンクされているため、
 Claude Code がユーザー設定に保存した変更はこのリポジトリに反映される。コミット前に確認する。
 認証情報、セッション、キャッシュなどの実行時の状態は管理しない。
 

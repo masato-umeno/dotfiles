@@ -1,4 +1,4 @@
-# start.sh・resume.sh から読み込む共通の関数。
+# start.sh・resume.sh・review.sh から読み込む共通の関数。
 
 # 絶対パスにする（Git Bash では C:/... の形）。比較のため小文字にする。
 _abspath_lower() {
