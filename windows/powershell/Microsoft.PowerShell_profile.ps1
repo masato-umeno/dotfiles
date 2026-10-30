@@ -9,6 +9,13 @@ function ... { Set-Location ..\.. }
 
 Set-Alias j z
 
+# Prefer the CLI bundled with the Codex app; an older winget CLI fails sandbox setup.
+$codexApp = Get-ChildItem "$env:LOCALAPPDATA\OpenAI\Codex\bin\*\codex.exe" -ErrorAction SilentlyContinue |
+  Sort-Object LastWriteTime | Select-Object -Last 1
+if ($codexApp) {
+  $env:PATH = "$($codexApp.DirectoryName);$env:PATH"
+}
+
 if (Test-Path "$PWD\workspace") {
   Set-Location "$PWD\workspace"
 }

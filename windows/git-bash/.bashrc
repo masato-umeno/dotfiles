@@ -1,5 +1,17 @@
 # dotfiles で管理する Git Bash の設定。
 
+# Codex アプリ同梱の CLI を winget 版より優先する（古い CLI はサンドボックスの初期化で失敗する）。
+# エージェントが使う非対話のシェルでも効くよう、下の判定より前に置く。
+__codex_app=
+for __codex_exe in "$HOME"/AppData/Local/OpenAI/Codex/bin/*/codex.exe; do
+  [ -f "$__codex_exe" ] || continue
+  if [ -z "$__codex_app" ] || [ "$__codex_exe" -nt "$__codex_app" ]; then
+    __codex_app="$__codex_exe"
+  fi
+done
+[ -n "$__codex_app" ] && PATH="${__codex_app%/*}:$PATH"
+unset __codex_app __codex_exe
+
 case $- in
   *i*) ;;
   *) return ;;

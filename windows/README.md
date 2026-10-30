@@ -30,6 +30,9 @@ Git Bash の設定は意図的に軽量にしている。シェルフレーム�
 エイリアスとリポジトリ用ヘルパー、zoxide/direnv の連携、Ctrl-R での fzf 履歴検索、Docker Compose の
 エイリアス、`ai-commit` ヘルパーを提供する。
 
+PowerShell と Git Bash は、Codex アプリ同梱の CLI を PATH の先頭に置く。winget 版の Codex CLI が古いと、
+サンドボックスの初期化(`setup refresh had errors`)で失敗するため。
+
 bootstrap の実行後は PowerShell と Git Bash を開き直す。
 
 ## Node / Python(mise + uv)

@@ -233,7 +233,8 @@ Orca の一覧には、終わったワーカーのワークツリーが溜まる
 ## 気をつけること
 
 - Codex のサンドボックスでは `gh` の認証が通らないことがある。そのときカンバンの操作は指揮者がする。
-- winget などで別に入れた Codex CLI が古いと、Codex アプリのランタイムと合わず、サンドボックスの初期化（`setup refresh had errors`）で全コマンドが失敗する。`codex --version` を確かめ、アプリ同梱の CLI を使う（`start.sh`／`resume.sh` は自動でそちらを選ぶ）。
+- winget などで別に入れた Codex CLI が古いと、Codex アプリのランタイムと合わず、サンドボックスの初期化（`setup refresh had errors`）で全コマンドが失敗する。`codex --version` を確かめ、アプリ同梱の CLI を使う（`scripts/` のスクリプトは自動でそちらを選ぶ。Windows のシェルも dotfiles の設定で同梱版を優先する）。
+- アプリ同梱の CLI の `codex exec` は、標準入力が開いたままだと、プロンプトを引数で渡しても入力を待ち続ける。引数で渡すときは `</dev/null` を付ける。
 - `Remove-Item -Force`／`rm -rf` を含むコマンドは、サンドボックスなしでも Codex の危険コマンド判定で止められる（`blocked by policy`）。ロックの解除は `rmdir` にさせる。
 - ワーカーは、自分のスキルの手順に従って「設計の了承をもらってから」と止まったり、ほかのワーカーのエディタを見て待たずに止まったりする。依頼文の共通ルールで先に封じておく。
 - カンバンを短時間に何度も動かすと、GitHub の二次レート制限（`API rate limit exceeded`。残量は残っていても出る）に当たる。少し待てば戻る。
