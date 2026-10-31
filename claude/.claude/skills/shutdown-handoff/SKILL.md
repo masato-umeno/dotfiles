@@ -16,8 +16,7 @@ bash ~/.claude/skills/shutdown-handoff/scripts/inventory.sh
 次のものを一覧にする。
 
 - このセッションのバックグラウンドタスク
-- Orca の端末とワーカー（`orca worktree ps`、`orca orchestration worker-list --json`）
-- 動いている opencode・codex・claude・重いエディタのプロセス（監視するものは環境変数 `HANDOFF_PROCS` で足す）
+- 動いている dsh・codex・claude・重いエディタのプロセス（監視するものは環境変数 `HANDOFF_PROCS` で足す）
 - 各ワークツリーの未コミットの変更と、未 push のコミット
 - このセッションの予約（CronList）
 
@@ -25,21 +24,20 @@ bash ~/.claude/skills/shutdown-handoff/scripts/inventory.sh
 
 - **もうすぐ終わるもの**（数分以内）は、終わるのを待って結果を受け取る。
 - **長くかかるもの**は、区切りのいいところで止める。
-  - 監督つきワーカーには `orca orchestration send` で「区切りで止めて状況を報告」と伝える。
-  - `opencode run` や `codex exec` のワーカーは、終わるのを待つか、操作者に止めてよいか確認する。
+  - `dsh` や `codex exec` のワーカーは、終わるのを待つか、操作者に止めてよいか確認する。
   - プロセスを強制終了するのは、操作者の了承があるときだけ。
 - 枠の上限などで既に止まったワーカーは、そのままにする（セッションはディスクに残っている）。
 
 ## 3. 引き継ぎを残す
 
-止めたワーカー・作業途中のワークツリーごとに、Orca のコメントに次を書く。コメントは `agent-orchestrate` の手順 0 が「中断」という語で探すので、必ず含める。
+止めたワーカー・作業途中のワークツリーごとに、ロックの理由に次を書く。理由は `git worktree list -v` の `locked:` の行に出る。`agent-orchestrate` の手順 0 が「中断」という語で探すので、必ず含める。ロックの間は `git worktree remove` と `prune` で消えない。
 
 ```bash
-orca worktree set --worktree <selector> --comment "中断（<理由>）。<再開のコマンド> <session id>（<モデル> <effort>）。残り：<残りの作業を 1 行で>"
+git worktree lock --reason "中断（<理由>）。<再開のコマンド> <session id>（<モデル> <effort>）。残り：<残りの作業を 1 行で>" <ワークツリーのパス>
 ```
 
 - 再開のコマンドと session id は、エージェントごとに次のとおり。
-  - opencode：`opencode run -s`。id はログの各行の `sessionID` で分かる。effort は書かない。
+  - dsh：`run-dsh.sh` の最後に session id を付ける。id は `run-dsh.sh` の「結果」の行か、ログの最初の行の `sessionId` で分かる。同じワークツリーでしか続けられない。
   - Codex：`codex exec resume`。id はワーカーの出力の先頭にある `session id:` で分かる。
   - Claude：`claude --resume` で使う id を書く。
 - ワークツリーに属さない引き継ぎ（次にやる予定、操作者の判断待ちなど）は、関係する Issue へのコメントに残す。
@@ -49,8 +47,7 @@ orca worktree set --worktree <selector> --comment "中断（<理由>）。<再�
 
 - **未コミットの変更は消さない。** ディスクに残るので、電源を切っても失われない。
 - **未 push のコミット**は一覧にして、操作者に push するか確認する。PC が手元から離れる・壊れる心配があるなら、push を勧める。
-- 終わったワーカーの端末は解放する（`worker-release`）。
-- マージ済みでクリーンなワークツリー、入力待ちのまま放置された古い端末は、削除の候補として一覧にする。消すのは操作者の了承を得てから（auto mode ではエージェントから消せないことが多い。その場合は、操作者が Orca の画面で消す手順を書く）。
+- マージ済みでクリーンなワークツリーは、削除の候補として一覧にする。消すのは操作者の了承を得てから（auto mode ではエージェントから消せないことが多い。その場合は、操作者が実行する `git worktree remove <パス>` を書く）。
 
 ## 5. 報告
 

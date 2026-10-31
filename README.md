@@ -127,6 +127,10 @@ reasoning を `medium`、plan モードを `high` にする。軽い作業は `g
 開発の分担は、全体管理が Opus 5.5、実装が DeepSeek のモデル、レビューが Codex。Codex の指摘を直すかどうかは
 Opus が決める。詳しくは `~/.codex/AGENTS.md` と `agent-orchestrate` スキルに書いている。
 
+実装のワーカーは DeepSeek Harness の `dsh` で動かし、作業ツリーは `git worktree` で分ける。DeepSeek Harness の
+アプリを入れて DeepSeek のアカウントでログインしておく。ワーカーの権限やデータの送り先は、
+`claude/.claude/skills/agent-orchestrate/references/agents/dsh.md` に書いている。
+
 `settings.json` は Pro プランでの開発向けに既定を Opus 5.5 の medium effort にし、よくある秘密情報の
 場所の読み取りを拒否する。ファイルはリンクされているため、
 Claude Code がユーザー設定に保存した変更はこのリポジトリに反映される。コミット前に確認する。
