@@ -41,3 +41,5 @@ claude/.claude/shell-snapshots/
 claude/.claude/statsig/
 claude/.claude/cache/
 claude/.claude/backups/
+claude/.claude/settings.json.bak
+claude/.claude/skills/synced/
