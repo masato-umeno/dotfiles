@@ -25,5 +25,7 @@
       "Read(~/.codex/auth.json)",
       "Read(~/.config/gh/hosts.yml)"
     ]
-  }
+  },
+  "inputNeededNotifEnabled": false,
+  "theme": "dark"
 }
