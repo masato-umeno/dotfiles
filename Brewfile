@@ -5,9 +5,12 @@ brew "fzf"
 brew "gh"
 brew "ghq"
 brew "git"
+brew "gitleaks"
 brew "mise"
 brew "ollama", restart_service: true
+brew "opencode"
 brew "ripgrep"
+brew "shellcheck"
 brew "stow"
 brew "zoxide"
 

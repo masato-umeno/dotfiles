@@ -31,13 +31,13 @@ Codex に実装を回すのは、操作者が明示的に頼んだときだけ�
    2. AGENTS.md、CLAUDE.md、CONTRIBUTING.md、タスク管理のドキュメント
 
    上書き設定に書かれ得る項目：PR を向けるブランチ、カンバン（owner・Project 番号・列名）、タスクの優先順と回さない条件、同時に動かす数と重いツールの上限、クラウドの環境と回してよい Issue、このリポジトリで使ってよいエージェントとモデル（段階表より優先する）、判断を仰ぐ相手、ワーカーに渡す追加ルール、既知の落とし穴。書かれていない項目は、このスキルの既定値を使う。
-2. **段階表と利用枠を見る。** 段階表は `~/.config/agent-orchestrate/models.md`（コストと実力の段階、課金状況、実績）。先に `bash ~/.claude/skills/agent-orchestrate/scripts/check-models.sh` を走らせる。「要調査: はい」なら、操作者に聞かずに `agent-models-refresh` の「自動で調べるとき」を行う。調べている間は待たずに、今の段階表で進めてよい。課金を変えたと聞いたときは、操作者に `agent-models-refresh` の全体を勧める。レビューに Codex を使うので、`bash ~/.claude/skills/agent-orchestrate/scripts/budget.sh` で残り枠を見る（5 時間枠と週の枠）。
+2. **段階表と利用枠を見る。** 段階表は `~/.config/agent-orchestrate/models.md`（コストと実力の段階、課金状況、実績）。先に `bash ~/.claude/skills/agent-orchestrate/scripts/check-models.sh` を走らせる。「要調査: はい」なら、操作者に聞かずに `agent-models-refresh` の「自動で調べるとき」を行う。調べている間は待たずに、今の段階表で進めてよい。「読めない一覧」に opencode が出たら実装を回さず、Codex が出たらレビューを回さずに、原因（未インストールなど）を操作者に伝える。課金を変えたと聞いたときは、操作者に `agent-models-refresh` の全体を勧める。レビューに Codex を使うので、`bash ~/.claude/skills/agent-orchestrate/scripts/budget.sh` で残り枠を見る（5 時間枠と週の枠）。
 3. `orca worktree ps` で、今動いているワーカーと残っている古いワークツリーを把握する。
-   - `orca worktree list` で、コメントに「中断」と書かれたワークツリーを探す。あれば、書かれている session id を使って、そのエージェントのやり方（opencode は `opencode run -s <session id>`、Codex は `codex exec resume`）で先に再開する（新しいタスクより優先する）。
+   - `orca worktree list` で、コメントに「中断」と書かれたワークツリーを探す。あれば、書かれている session id を使って、そのエージェントのやり方（opencode は `run-opencode.sh` に `-s <session id>` を付ける、Codex は `codex exec resume`）で先に再開する（新しいタスクより優先する）。
    - ワーカーを中断するとき（枠の上限、PC を閉じるなど）は、`orca worktree set --comment` に session id・モデル・残りの作業を書き残す。
    - 端末を閉じる・ワークツリーを消すのは **操作者に確認してから**。未コミットの変更があるワークツリーは消さない。使わないワークツリーが溜まっていたら、手順 6 で片付ける。
 4. 次の許可ルールがない場合は、操作者に追加を頼む（なければ起動が拒否される）。
-   `Bash(timeout * opencode run *)`、`Bash(bash ~/.claude/skills/agent-orchestrate/scripts/review.sh *)`、`Bash(orca orchestration *)`、`Bash(orca worktree create *)`
+   `Bash(bash ~/.claude/skills/agent-orchestrate/scripts/run-opencode.sh *)`、`Bash(bash ~/.claude/skills/agent-orchestrate/scripts/review.sh *)`、`Bash(orca orchestration *)`、`Bash(orca worktree create *)`
    操作者に頼まれて Codex に実装させる場合（3 を参照）は `Bash(codex exec *)` も、サンドボックスなしなら `Bash(bash ~/.claude/skills/agent-orchestrate/scripts/start.sh *)`、`Bash(bash ~/.claude/skills/agent-orchestrate/scripts/resume.sh *)` も、クラウドに回す場合（1 を参照）は `Bash(codex cloud *)` も要る。
 5. 空きメモリと CPU を見る（見方と目安は 1 の「同時に動かす数」）。
 6. **開発に関わらないアプリを閉じる。** オーケストレーションの間は、作業に使わないアプリ（チャット、メモ、デスクトップの AI アプリ、使っていない WSL など）を閉じて、メモリをワーカーと重いツールに回す。
@@ -102,7 +102,7 @@ Codex のクラウドタスクは差分を返すだけで、commit・push・PR �
 - **Issue の中身に合うモデルから始める。** 段階表の「向く仕事」「止まりやすい仕事」と、同じ種類の Issue の実績を見る。迷ったら安いモデルから。
 - 段階表の「今の方針」と費用の上限に合わせる。
 - 画面のスクリーンショットなど、画像を読ませる作業には、画像入力に対応したモデルを選ぶ。
-- 段階表がなければ、`opencode models opencode` で確かめた DeepSeek のモデルを使う。
+- 段階表がなければ、`opencode models` で確かめた DeepSeek のモデルと公式の値段を操作者に見せ、費用の上限の了承を得てから使う。
 - うまくいかなかったら（調べただけで止まる、同じ指摘を 2 回しても直らない）、次のモデルに切り替える。
   - 同じワークツリーで新しく起動し、依頼文に「前のワーカーの途中の成果がある。`git status` と `git log` を見てから続ける」と足す。
   - 同じ種類の Issue で安いモデルが失敗していれば、続きは最初から上のモデルにしてよい。
@@ -125,8 +125,8 @@ Codex の枠の目安（レビューにも当てはまる）：5 時間枠が 40
 
 ```bash
 orca worktree create --name issue-<番号> --base-branch origin/<base> --issue <番号> --setup skip --comment "OpenCode(<モデル>) に委任" --json
-timeout 3600 opencode run --model <モデル> --dir <ワークツリーのパス> --format json \
-  --title "#<番号> <題>" "$(cat <依頼文ファイル>)" < /dev/null > <ログファイル> 2>&1
+bash ~/.claude/skills/agent-orchestrate/scripts/run-opencode.sh 3600 <ワークツリーのパス> --model <モデル> --format json \
+  --title "#<番号> <題>" "$(cat <依頼文ファイル>)" > <ログファイル> 2>&1
 ```
 
 モデルは上書き設定・段階表・ユーザーの指示に従う。ログの見方とそのほかの注意は `references/agents/opencode.md` にある。
@@ -192,7 +192,7 @@ bash ~/.claude/skills/agent-orchestrate/scripts/resume.sh <ワークツリーの
    - 見送る指摘は、理由を一言つけて PR にコメントする。
    - 直したあとに Codex にもう一度レビューさせるかどうかも、指揮者が決める。
 5. 直す点は、**同じセッションを続けて** ワーカーに頼む。こうすると文脈が残っていて安くつく。
-   - `opencode run`：`opencode run -s <sessionID> --model <モデル> --dir <ワークツリーのパス> "<指摘>" < /dev/null`
+   - `opencode run`：`bash ~/.claude/skills/agent-orchestrate/scripts/run-opencode.sh 3600 <ワークツリーのパス> -s <sessionID> --model <モデル> "<指摘>"`
    - 監督つきワーカー：`orca orchestration send` で伝える
    - サンドボックスなし：`resume.sh` で伝える
    - `codex exec`（サンドボックスあり）の場合：ワークツリーに `cd` して、次を実行する。
