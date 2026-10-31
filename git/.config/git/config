@@ -24,3 +24,8 @@
 # 個人の識別情報とマシン固有の上書き設定は dotfiles の外に置く。
 [include]
 	path = ~/.config/git/config.local
+
+# GitHub への接続は SSH の URL でも HTTPS(gh の認証情報)で行う。
+[url "https://github.com/"]
+	insteadOf = git@github.com:
+	insteadOf = ssh://git@github.com/
