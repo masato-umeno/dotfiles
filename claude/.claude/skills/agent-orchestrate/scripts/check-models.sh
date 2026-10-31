@@ -1,15 +1,12 @@
 #!/usr/bin/env bash
-# 段階表が今のモデル一覧に追いついているかを見る。一覧は手元のキャッシュから読み、更新はしない。
+# 段階表が今のモデル一覧に追いついているかを見る。dsh の一覧はエラーの応答から、Codex の一覧は手元のキャッシュから読む。
 # 更新日は分担の変更でも新しくなるので、段階表に名前のないモデルと調査日で判定する。
 # 「要調査: はい」なら agent-models-refresh の「自動で調べるとき」に進む。
 # 一覧を読めなければ「読めない一覧」に出して、終了コード 1 にする。追いついているとは言わない。
 . "$(dirname "$0")/_common.sh"
-opencode_status=0
-standalone=$(opencode_standalone models)
-models=$(with_timeout 20 opencode models ${standalone:+"$standalone"} 2>/dev/null) || opencode_status=$?
-models=$(printf '%s\n' "$models" | grep -i deepseek || true)
+models=$(dsh_models)
 PY=$(command -v python3 || command -v python) || { echo "check-models.sh: python がない" >&2; exit 1; }
-OPENCODE_STATUS="$opencode_status" OPENCODE_MODELS="$models" PYTHONIOENCODING=utf-8 "$PY" - <<'PY'
+DSH_MODELS="$models" PYTHONIOENCODING=utf-8 "$PY" - <<'PY'
 import datetime
 import json
 import os
@@ -20,11 +17,12 @@ MAX_AGE_DAYS = 7
 names = []
 unreadable = []
 
-opencode_names = os.environ.get("OPENCODE_MODELS", "").split()
-if os.environ.get("OPENCODE_STATUS") == "0" and opencode_names:
-    names += opencode_names
+dsh_names = os.environ.get("DSH_MODELS", "").split()
+if dsh_names:
+    print("dsh のモデル: " + ", ".join(dsh_names))
+    names += dsh_names
 else:
-    unreadable.append("opencode")
+    unreadable.append("dsh")
 
 try:
     cache_path = os.path.expanduser("~/.codex/models_cache.json")

@@ -4,7 +4,7 @@
 set -euo pipefail
 . "$(dirname "$0")/_common.sh"
 wt="$1"; model="$2"; effort="$3"; prompt="$4"
-# Orca のワークツリーが共有する .git はワークツリーの外にあるので、書き込み先として渡す
+# ワークツリーが共有する .git はワークツリーの外にあるので、書き込み先として渡す
 gitdir=$(git -C "$wt" rev-parse --path-format=absolute --git-common-dir)
 out="$(dirname "$prompt")/r-$(basename "$wt").md"
 "$(codex_bin)" exec -m "$model" -c model_reasoning_effort="$effort" \

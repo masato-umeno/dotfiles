@@ -11,7 +11,7 @@ agent-orchestrate が読み、agent-models-refresh が更新する。リポジ�
 |---|---|---|---|
 | （例：Claude） | （例：月額プラン） | （例：指揮者が使う） | |
 | （例：ChatGPT / Codex） | | （`budget.sh` の値と測った日） | |
-| （例：opencode） | （例：従量課金） | （例：残高） | |
+| （例：DeepSeek） | （例：DeepSeek Harness のアカウント、従量課金） | （例：残高） | |
 
 - 今月かけてよい追加の費用：
 - 今の方針：
@@ -23,8 +23,8 @@ agent-orchestrate が読み、agent-models-refresh が更新する。リポジ�
 | 役割 | エージェント | モデル | 向く仕事 | 止まりやすい仕事 | 条件・期限 |
 |---|---|---|---|---|---|
 | 全体管理 | Claude Code | | 計画、依頼文、切り替え、レビュー結果の判断 | | |
-| 実装 | opencode | （例：DeepSeek の Flash） | | | |
-| 実装 | opencode | （例：DeepSeek の Pro） | | | |
+| 実装 | dsh | （例：deepseek-flash） | | | |
+| 実装 | dsh | （例：deepseek-v4-pro） | | | |
 | レビュー | Codex | （例：安いモデル） | 読むだけのレビュー | | |
 | レビュー | Codex | （例：上位のモデル） | 差分が大きい、共通基盤を変える PR | | |
 

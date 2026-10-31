@@ -1,0 +1,14 @@
+# dsh --profile headless に --patch で足す。
+# headless は既定で保存済みの認証を読まないので、アプリでログインしたアカウントを使えるようにする。
+# モデルと effort は run-dsh.sh の環境変数で決める。
+- id: credentials
+  disabled: false
+- id: authorization
+  disabled: false
+- id: deepseek-account
+  disabled: false
+- id: agent-default-model
+  config:
+    provider: deepseek-account
+    model: !!js process.env.DSH_WORKER_MODEL
+    reasoningEffort: !!js process.env.DSH_WORKER_EFFORT
