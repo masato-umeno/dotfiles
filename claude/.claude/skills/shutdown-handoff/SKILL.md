@@ -17,7 +17,7 @@ bash ~/.claude/skills/shutdown-handoff/scripts/inventory.sh
 
 - このセッションのバックグラウンドタスク
 - Orca の端末とワーカー（`orca worktree ps`、`orca orchestration worker-list --json`）
-- 動いている codex・claude・重いエディタのプロセス（監視するものは環境変数 `HANDOFF_PROCS` で足す）
+- 動いている opencode・codex・claude・重いエディタのプロセス（監視するものは環境変数 `HANDOFF_PROCS` で足す）
 - 各ワークツリーの未コミットの変更と、未 push のコミット
 - このセッションの予約（CronList）
 
@@ -26,7 +26,7 @@ bash ~/.claude/skills/shutdown-handoff/scripts/inventory.sh
 - **もうすぐ終わるもの**（数分以内）は、終わるのを待って結果を受け取る。
 - **長くかかるもの**は、区切りのいいところで止める。
   - 監督つきワーカーには `orca orchestration send` で「区切りで止めて状況を報告」と伝える。
-  - `codex exec` のワーカーは、終わるのを待つか、操作者に止めてよいか確認する。
+  - `opencode run` や `codex exec` のワーカーは、終わるのを待つか、操作者に止めてよいか確認する。
   - プロセスを強制終了するのは、操作者の了承があるときだけ。
 - 枠の上限などで既に止まったワーカーは、そのままにする（セッションはディスクに残っている）。
 
@@ -35,10 +35,13 @@ bash ~/.claude/skills/shutdown-handoff/scripts/inventory.sh
 止めたワーカー・作業途中のワークツリーごとに、Orca のコメントに次を書く。コメントは `agent-orchestrate` の手順 0 が「中断」という語で探すので、必ず含める。
 
 ```bash
-orca worktree set --worktree <selector> --comment "中断（<理由>）。codex exec resume <session id>（<モデル> <effort>）。残り：<残りの作業を 1 行で>"
+orca worktree set --worktree <selector> --comment "中断（<理由>）。<再開のコマンド> <session id>（<モデル> <effort>）。残り：<残りの作業を 1 行で>"
 ```
 
-- session id は、ワーカーの出力の先頭にある `session id:` で分かる。Claude のセッションなら `claude --resume` で使う id を書く。
+- 再開のコマンドと session id は、エージェントごとに次のとおり。
+  - opencode：`opencode run -s`。id はログの各行の `sessionID` で分かる。effort は書かない。
+  - Codex：`codex exec resume`。id はワーカーの出力の先頭にある `session id:` で分かる。
+  - Claude：`claude --resume` で使う id を書く。
 - ワークツリーに属さない引き継ぎ（次にやる予定、操作者の判断待ちなど）は、関係する Issue へのコメントに残す。
 - このセッション内の予約（CronCreate）は、セッションと一緒に消える。予約していた内容は、上のコメントか Issue に書き移す。
 
