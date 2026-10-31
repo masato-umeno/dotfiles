@@ -84,6 +84,8 @@ setopt list_packed
 setopt hist_ignore_dups
 # cd したら自動で ls を実行する
 function chpwd() {
+  # エージェントなどの非対話シェルでは、cd の出力を増やさない
+  [[ -o interactive ]] || return
   # ターミナルのタイトルを更新する
   echo -ne "\033]0;$(pwd | rev | awk -F \/ '{print "/"$1"/"$2}'| rev)\007"
   # カレントディレクトリの情報を表示する
