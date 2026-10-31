@@ -13,6 +13,9 @@
     ],
     "deny": [
       "Bash(codex *--dangerously-bypass-approvals-and-sandbox*)",
+      "Bash(opencode *--auto*)",
+      "Bash(timeout * opencode *--auto*)",
+      "Bash(bash ~/.claude/skills/agent-orchestrate/scripts/run-opencode.sh *--auto*)",
       "Read(./.env)",
       "Read(./.env.*)",
       "Read(~/.ssh/**)",
