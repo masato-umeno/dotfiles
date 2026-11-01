@@ -31,7 +31,7 @@ Codex に実装を回すのは、操作者が明示的に頼んだときだけ�
    2. AGENTS.md、CLAUDE.md、CONTRIBUTING.md、タスク管理のドキュメント
 
    上書き設定に書かれ得る項目：PR を向けるブランチ、カンバン（owner・Project 番号・列名）、タスクの優先順と回さない条件、同時に動かす数と重いツールの上限、クラウドの環境と回してよい Issue、このリポジトリで使ってよいエージェントとモデル（段階表より優先する）、判断を仰ぐ相手、ワーカーに渡す追加ルール、既知の落とし穴。書かれていない項目は、このスキルの既定値を使う。
-2. **段階表と利用枠を見る。** 段階表は `~/.config/agent-orchestrate/models.md`（コストと実力の段階、課金状況、実績）。先に `bash ~/.claude/skills/agent-orchestrate/scripts/check-models.sh` を走らせる。「要調査: はい」なら、操作者に聞かずに `agent-models-refresh` の「自動で調べるとき」を行う。調べている間は待たずに、今の段階表で進めてよい。「読めない一覧」に dsh が出たら実装を回さず、Codex が出たらレビューを回さずに、原因（未インストール、アプリのログイン切れなど）を操作者に伝える。課金を変えたと聞いたときは、操作者に `agent-models-refresh` の全体を勧める。レビューに Codex を使うので、`bash ~/.claude/skills/agent-orchestrate/scripts/budget.sh` で残り枠を見る（5 時間枠と週の枠）。
+2. **段階表と利用枠を見る。** 段階表は `~/.config/agent-orchestrate/models.md`（コストと実力の段階、課金状況、実績）。先に `bash ~/.claude/skills/agent-orchestrate/scripts/check-models.sh` を走らせる。「要調査: はい」なら、操作者に聞かずに `agent-models-refresh` の「自動で調べるとき」を行う。実装のモデルの順位に関わる調査は、最初のワーカーを起動する前に終える。レビューのモデルの調査は、待たずに今の段階表で進めてよい。「読めない一覧」に dsh が出たら実装を回さず、Codex が出たらレビューを回さずに、原因（未インストール、アプリのログイン切れなど）を操作者に伝える。課金を変えたと聞いたときは、操作者に `agent-models-refresh` の全体を勧める。レビューに Codex を使うので、`bash ~/.claude/skills/agent-orchestrate/scripts/budget.sh` で残り枠を見る（5 時間枠と週の枠）。
 3. `git worktree list -v` で、残っているワークツリーを把握する。動いているワーカーは `pgrep -fl dsh-desktop-host/lib/cli.js` で分かる。
    - `locked:` の行に「中断」と書かれたワークツリーを探す。あれば、書かれている session id を使って、そのエージェントのやり方（dsh は `run-dsh.sh` の最後に session id を付ける、Codex は `codex exec resume`）で先に再開し（新しいタスクより優先する）、`git worktree unlock <パス>` で外す。
    - ワーカーを中断するとき（枠の上限、PC を閉じるなど）は、`git worktree lock --reason "中断（<理由>）。<session id>（<モデル>）。残り：<残りの作業>" <パス>` で書き残す。理由は `git worktree list -v` に出て、ロックの間は `git worktree remove` と `prune` で消えない。
@@ -99,6 +99,7 @@ Codex のクラウドタスクは差分を返すだけで、commit・push・PR �
 
 実装は DeepSeek のモデルに回し、作業に合わせて指揮者が切り替える。使えるモデルと条件は、段階表の「実装」の段に書く。Codex には回さない（レビュー専業。手順 4）。
 
+- **名前や値段の高さで実力を決めない。** 「pro」「flash」のような名前は順位を示さない。新しい版の軽量モデルが、古い版の上位モデルを追い越すことがある。段階表の「段階」が空や了承待ちのときは、実装の候補どうしを発表日、公開の比較（コードとエージェントの課題）、値段、段階表の実績で比べてから、最初のモデルを決める。
 - **Issue の中身に合うモデルから始める。** 段階表の「向く仕事」「止まりやすい仕事」と、同じ種類の Issue の実績を見る。迷ったら安いモデルから。
 - 段階表の「今の方針」と費用の上限に合わせる。
 - 画面のスクリーンショットなど、画像を読ませる作業には、画像入力に対応したモデルを選ぶ。
