@@ -35,7 +35,7 @@ if command -v fzf >/dev/null 2>&1; then
 
     selected=$(fc -rl 1 \
       | sed 's/^[[:space:]]*[0-9]\+[[:space:]]*//' \
-      | fzf --tac +s) || return
+      | fzf +s) || return
 
     parts=(${(z)selected})
     (( ${#parts[@]} > 1 )) || return
