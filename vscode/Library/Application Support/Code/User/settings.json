@@ -77,6 +77,5 @@
         "Starlark",
         "worktrees"
     ],
-    "moonbit.ai.telemetry": "on",
-    "workbench.colorTheme": "Aura Dark"
+    "moonbit.ai.telemetry": "on"
 }
