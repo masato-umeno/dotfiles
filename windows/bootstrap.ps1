@@ -35,6 +35,8 @@ $AppsWinget = @(
   "x-motemen.ghq",
   "jqlang.jq",
   "ajeetdsouza.zoxide",
+  "Gitleaks.Gitleaks",
+  "koalaman.shellcheck",
   "7zip.7zip",
   "WinMerge.WinMerge",
   "SlackTechnologies.Slack",
