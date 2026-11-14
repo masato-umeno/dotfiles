@@ -1,7 +1,6 @@
 # Windows のセットアップ
 
-Windows のセットアップは **winget を既定のパッケージマネージャー**として使う。Scoop は Git Bash から
-使うと便利な開発者向け CLI ツールのためだけに残している。Chocolatey は不要。
+Windows のアプリと CLI ツールはすべて **winget** で管理する。Scoop と Chocolatey は使わない。
 
 前提: `winget`(アプリ インストーラー)が使えること。
 
@@ -11,14 +10,11 @@ cd $HOME\dotfiles
 .\windows\bootstrap.ps1
 ```
 
-bootstrap は Git for Windows を含む通常の Windows アプリを winget でインストールし、次の CLI ツールを
-Scoop でインストールする:
+bootstrap は `windows/bootstrap.ps1` の `$AppsWinget` に並べたアプリと CLI ツール(PowerShell 7、
+Windows Terminal、Git for Windows、`direnv`、`fzf`、`ghq`、`jq`、`zoxide` など)を winget でインストールする。
+アプリを足すときはこの一覧に winget の ID を書き足す。ID は `winget search <名前>` で調べる。
 
-- `direnv`
-- `fzf`
-- `ghq`
-- `jq`
-- `zoxide`
+更新はまとめて `winget upgrade --all` で行う。
 
 A5:SQL Mk-2 は winget 経由で Microsoft Store からインストールする。Microsoft Store へのサインインが
 必要な場合がある。

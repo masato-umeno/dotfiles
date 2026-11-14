@@ -22,24 +22,25 @@ $MiseConfigTarget = Join-Path $HOME ".config\mise\config.toml"
 $MiseShimsDir = Join-Path $env:LOCALAPPDATA "mise\shims"
 
 $AppsWinget = @(
+  "Microsoft.PowerShell",
+  "Microsoft.WindowsTerminal",
   "Git.Git",
   "jdx.mise",
   "astral-sh.uv",
+  "direnv.direnv",
+  "junegunn.fzf",
+  "x-motemen.ghq",
+  "jqlang.jq",
+  "ajeetdsouza.zoxide",
+  "7zip.7zip",
   "WinMerge.WinMerge",
   "SlackTechnologies.Slack",
   "Zoom.Zoom",
   "Obsidian.Obsidian",
   "Google.Chrome",
   "sakura-editor.sakura",
-  "Microsoft.VisualStudioCode"
-)
-
-$AppsScoop = @(
-  "direnv",
-  "fzf",
-  "ghq",
-  "jq",
-  "zoxide"
+  "Microsoft.VisualStudioCode",
+  "ZedIndustries.Zed"
 )
 
 function Ensure-Directory([string]$Path) {
@@ -52,23 +53,13 @@ if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
   throw "winget is required. Install or update App Installer, then run this script again."
 }
 
-Write-Host "[1/9] Install package managers"
-if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
-  Set-ExecutionPolicy -Scope CurrentUser RemoteSigned -Force
-  Invoke-RestMethod -Uri "https://get.scoop.sh" | Invoke-Expression
-}
-
-Write-Host "[2/9] Install apps and CLI tools"
+Write-Host "[1/8] Install apps and CLI tools"
 foreach ($app in $AppsWinget) {
   winget install --id $app --exact --accept-source-agreements --accept-package-agreements
 }
 winget install --id "9NSBB9XTJW86" --exact --source msstore --accept-source-agreements --accept-package-agreements
 
-foreach ($app in $AppsScoop) {
-  scoop install $app
-}
-
-Write-Host "[3/9] Place .bat files on Desktop"
+Write-Host "[2/8] Place .bat files on Desktop"
 if (Test-Path $DesktopSource) {
   Ensure-Directory $DesktopTarget
   Copy-Item -Path (Join-Path $DesktopSource "*.bat") -Destination $DesktopTarget -Force
@@ -76,7 +67,7 @@ if (Test-Path $DesktopSource) {
   Write-Host "skip: desktop source not found: $DesktopSource"
 }
 
-Write-Host "[4/9] Create C:\runshortcut and add to PATH"
+Write-Host "[3/8] Create C:\runshortcut and add to PATH"
 Ensure-Directory $RunShortcutDir
 $UserPath = [Environment]::GetEnvironmentVariable("Path", "User")
 if (-not $UserPath) { $UserPath = "" }
@@ -86,7 +77,7 @@ if ($UserPath -notmatch [Regex]::Escape($RunShortcutDir)) {
   $env:Path = $NewUserPath + ";" + $env:Path
 }
 
-Write-Host "[5/9] Install PowerShell profile"
+Write-Host "[4/8] Install PowerShell profile"
 if (Test-Path $ProfileSource) {
   Ensure-Directory (Split-Path $ProfileTarget -Parent)
   Copy-Item -Path $ProfileSource -Destination $ProfileTarget -Force
@@ -94,7 +85,7 @@ if (Test-Path $ProfileSource) {
   Write-Host "skip: profile source not found: $ProfileSource"
 }
 
-Write-Host "[6/9] Install Git Bash settings"
+Write-Host "[5/8] Install Git Bash settings"
 if (
   (Test-Path $GitBashRcSource) -and
   (Test-Path $GitBashProfileSource) -and
@@ -107,14 +98,14 @@ if (
   Write-Host "skip: Git Bash settings not found"
 }
 
-Write-Host "[7/9] Install .wslconfig"
+Write-Host "[6/8] Install .wslconfig"
 if (Test-Path $WslConfigSource) {
   Copy-Item -Path $WslConfigSource -Destination $WslConfigTarget -Force
 } else {
   Write-Host "skip: wsl config not found: $WslConfigSource"
 }
 
-Write-Host "[8/9] Install VS Code settings"
+Write-Host "[7/8] Install VS Code settings"
 if (Test-Path $VscodeSource) {
   Ensure-Directory (Split-Path $VscodeTarget -Parent)
   Copy-Item -Path $VscodeSource -Destination $VscodeTarget -Force
@@ -122,7 +113,7 @@ if (Test-Path $VscodeSource) {
   Write-Host "skip: vscode settings not found: $VscodeSource"
 }
 
-Write-Host "[9/9] Set up mise (Node / Python)"
+Write-Host "[8/8] Set up mise (Node / Python)"
 if (Test-Path $MiseConfigSource) {
   Ensure-Directory (Split-Path $MiseConfigTarget -Parent)
   Copy-Item -Path $MiseConfigSource -Destination $MiseConfigTarget -Force
