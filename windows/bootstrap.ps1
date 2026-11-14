@@ -30,7 +30,7 @@ $AppsWinget = @(
   "Zoom.Zoom",
   "Obsidian.Obsidian",
   "Google.Chrome",
-  "SakuraEditor.SakuraEditor",
+  "sakura-editor.sakura",
   "Microsoft.VisualStudioCode"
 )
 
