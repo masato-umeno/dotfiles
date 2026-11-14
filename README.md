@@ -6,6 +6,16 @@ dotfiles の正本。編集はこのリポジトリのチェックアウトで�
 ユーザー設定は GNU Stow で、グローバルなコマンドラインツールと macOS アプリはルートの
 `Brewfile` で管理する。Nix は各プロジェクトのリポジトリで定義する開発環境専用とする。
 
+## コミット前の検査
+
+このリポジトリは公開する前提なので、コミットのたびに `.githooks/pre-commit` が空白の誤りと秘密情報を
+gitleaks で調べる。gitleaks は `Brewfile`(macOS)と `windows/bootstrap.ps1`(Windows)で入る。
+クローンしたら一度だけフックを有効にする:
+
+```shell
+git config core.hooksPath .githooks
+```
+
 ## Stow で適用する
 
 前提: GNU Stow。このリポジトリのチェックアウトのルートで実行する。

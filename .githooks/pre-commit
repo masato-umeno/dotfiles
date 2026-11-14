@@ -1,0 +1,11 @@
+#!/bin/sh
+# コミットの前に、ステージした内容の空白の誤りと秘密情報を調べる。
+# 有効にする: git config core.hooksPath .githooks
+
+if ! command -v gitleaks >/dev/null 2>&1; then
+  echo "pre-commit: gitleaks: command not found. Install it, then commit again." >&2
+  exit 1
+fi
+
+git diff --cached --check || exit 1
+exec gitleaks git --pre-commit --staged --redact --verbose --no-banner .

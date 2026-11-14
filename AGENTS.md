@@ -23,7 +23,7 @@
 
 | 変更 | 確認 |
 |---|---|
-| すべて | ステージ後に `git diff --cached --check` と `gitleaks git --staged --redact .` を実行する |
+| すべて | コミット時に `.githooks/pre-commit` が `git diff --cached --check` と gitleaks を実行する。`git config core.hooksPath` が `.githooks` でなければ設定する。`--no-verify` でフックを飛ばさない |
 | パッケージのファイルの追加・移動・削除 | 上の `stow --simulate` を実行する。Stow で適用していない環境では、`--target` に `mktemp -d` の空のフォルダを渡す |
 | シェルスクリプト・シェル設定 | `bash -n <ファイル>` と `git show :<ファイル> \| shellcheck -s bash -` を実行し、警告を増やさない。Windows の作業ツリーは CRLF のことがあるので、ステージ済みの内容を渡す |
 | 実行するスクリプト | 通常の実行に加えて、依存するコマンドがないときと失敗するときの動作を確かめる。失敗が成功に見える出力にしない |
