@@ -19,6 +19,11 @@ Windows Terminal、Git for Windows、`direnv`、`fzf`、`ghq`、`jq`、`zoxide` 
 A5:SQL Mk-2 は winget 経由で Microsoft Store からインストールする。Microsoft Store へのサインインが
 必要な場合がある。
 
+PowerShell 7 のプロファイルは `windows/powershell/` から `Documents\PowerShell\` にコピーされる。
+zsh と同じ `ll` / `la` / `lg` / `..` / `j` / `g` / `repo` / `repo-code`(`rc`)/ `ai-commit` / Docker Compose の
+エイリアスを関数として定義し、Ctrl-R での fzf 履歴検索と zoxide / direnv の連携を入れる。`ls` は PowerShell
+組み込みのエイリアス(`Get-ChildItem`)のまま使う。
+
 Git Bash の設定は `windows/git-bash/` から `~/.bashrc` と `~/.bash_profile` にコピーされる。これらの
 ファイルはこのリポジトリで管理しており、bootstrap を再実行すると上書きされる。
 
