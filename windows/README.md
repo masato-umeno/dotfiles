@@ -24,6 +24,9 @@ zsh と同じ `ll` / `la` / `lg` / `..` / `j` / `g` / `repo` / `repo-code`(`rc`)
 エイリアスを関数として定義し、Ctrl-R での fzf 履歴検索と zoxide / direnv の連携を入れる。`ls` は PowerShell
 組み込みのエイリアス(`Get-ChildItem`)のまま使う。
 
+bootstrap は Windows Terminal の既定のプロファイルを「PowerShell」(インストール済みの最新の PowerShell 7)に
+する。Windows Terminal を一度も開いていないと設定ファイルがないので、開いてから bootstrap を再実行する。
+
 Git Bash の設定は `windows/git-bash/` から `~/.bashrc` と `~/.bash_profile` にコピーされる。これらの
 ファイルはこのリポジトリで管理しており、bootstrap を再実行すると上書きされる。
 
