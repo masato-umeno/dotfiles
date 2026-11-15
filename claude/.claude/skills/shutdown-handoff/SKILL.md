@@ -16,7 +16,7 @@ bash ~/.claude/skills/shutdown-handoff/scripts/inventory.sh
 次のものを一覧にする。
 
 - このセッションのバックグラウンドタスク
-- 動いている dsh・codex・claude・重いエディタのプロセス（監視するものは環境変数 `HANDOFF_PROCS` で足す）
+- 動いている dsh・claude・重いエディタのプロセス（監視するものは環境変数 `HANDOFF_PROCS` で足す）
 - 各ワークツリーの未コミットの変更と、未 push のコミット
 - このセッションの予約（CronList）
 
@@ -24,7 +24,7 @@ bash ~/.claude/skills/shutdown-handoff/scripts/inventory.sh
 
 - **もうすぐ終わるもの**（数分以内）は、終わるのを待って結果を受け取る。
 - **長くかかるもの**は、区切りのいいところで止める。
-  - `dsh` や `codex exec` のワーカーは、終わるのを待つか、操作者に止めてよいか確認する。
+  - `dsh` のワーカーは、終わるのを待つか、操作者に止めてよいか確認する。
   - プロセスを強制終了するのは、操作者の了承があるときだけ。
 - 枠の上限などで既に止まったワーカーは、そのままにする（セッションはディスクに残っている）。
 
@@ -38,7 +38,6 @@ git worktree lock --reason "中断（<理由>）。<再開のコマンド> <sess
 
 - 再開のコマンドと session id は、エージェントごとに次のとおり。
   - dsh：`run-dsh.sh` の最後に session id を付ける。id は `run-dsh.sh` の「結果」の行か、ログの最初の行の `sessionId` で分かる。同じワークツリーでしか続けられない。
-  - Codex：`codex exec resume`。id はワーカーの出力の先頭にある `session id:` で分かる。
   - Claude：`claude --resume` で使う id を書く。
 - ワークツリーに属さない引き継ぎ（次にやる予定、操作者の判断待ちなど）は、関係する Issue へのコメントに残す。
 - このセッション内の予約（CronCreate）は、セッションと一緒に消える。予約していた内容は、上のコメントか Issue に書き移す。

@@ -8,14 +8,10 @@
   },
   "permissions": {
     "allow": [
-      "Bash(codex exec -s read-only:*)",
-      "Bash(codex exec review:*)",
       "Bash(bash ~/.claude/skills/agent-orchestrate/scripts/run-dsh.sh *)",
-      "Bash(bash ~/.claude/skills/agent-orchestrate/scripts/review.sh *)",
       "Bash(git worktree add *)"
     ],
     "deny": [
-      "Bash(codex *--dangerously-bypass-approvals-and-sandbox*)",
       "Bash(*DSH_PERMISSION_MODE=danger-full-access*)",
       "Read(./.env)",
       "Read(./.env.*)",

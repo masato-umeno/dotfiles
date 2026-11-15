@@ -1,17 +1,5 @@
 # dotfiles で管理する Git Bash の設定。
 
-# Codex アプリ同梱の CLI を winget 版より優先する（古い CLI はサンドボックスの初期化で失敗する）。
-# エージェントが使う非対話のシェルでも効くよう、下の判定より前に置く。
-__codex_app=
-for __codex_exe in "$HOME"/AppData/Local/OpenAI/Codex/bin/*/codex.exe; do
-  [ -f "$__codex_exe" ] || continue
-  if [ -z "$__codex_app" ] || [ "$__codex_exe" -nt "$__codex_app" ]; then
-    __codex_app="$__codex_exe"
-  fi
-done
-[ -n "$__codex_app" ] && PATH="${__codex_app%/*}:$PATH"
-unset __codex_app __codex_exe
-
 case $- in
   *i*) ;;
   *) return ;;
@@ -104,8 +92,8 @@ repo-code() {
 alias rc='repo-code'
 
 ai-commit() {
-  if ! command -v codex >/dev/null 2>&1; then
-    echo "codex: command not found" >&2
+  if ! command -v claude >/dev/null 2>&1; then
+    echo "claude: command not found" >&2
     return 127
   fi
 
@@ -124,7 +112,7 @@ ai-commit() {
 
   diff="$(git diff --cached)"
 
-  plan="$(codex exec <<EOF
+  plan="$(claude -p <<EOF
 Analyze the following git diff and split it into logical commits.
 
 Return JSON:
@@ -139,6 +127,7 @@ Rules:
 - Use Conventional Commits
 - Group by logical concern
 - Avoid mixing unrelated changes
+- Output only the JSON array, without code fences or prose
 
 Diff:
 $diff

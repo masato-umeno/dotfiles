@@ -11,13 +11,6 @@ function ... { Set-Location ..\.. }
 Set-Alias j z
 Set-Alias g git
 
-# Prefer the CLI bundled with the Codex app; an older winget CLI fails sandbox setup.
-$codexApp = Get-ChildItem "$env:LOCALAPPDATA\OpenAI\Codex\bin\*\codex.exe" -ErrorAction SilentlyContinue |
-  Sort-Object LastWriteTime | Select-Object -Last 1
-if ($codexApp) {
-  $env:PATH = "$($codexApp.DirectoryName);$env:PATH"
-}
-
 if (Test-Path "$PWD\workspace") {
   Set-Location "$PWD\workspace"
 }
@@ -78,8 +71,8 @@ Set-Alias rc repo-code
 
 # Generate commit messages from the staged diff and split it into logical commits.
 function ai-commit {
-  if (-not (Get-Command codex -ErrorAction SilentlyContinue)) {
-    Write-Error "codex: command not found"
+  if (-not (Get-Command claude -ErrorAction SilentlyContinue)) {
+    Write-Error "claude: command not found"
     return
   }
 
@@ -107,10 +100,11 @@ Rules:
 - Use Conventional Commits
 - Group by logical concern
 - Avoid mixing unrelated changes
+- Output only the JSON array, without code fences or prose
 
 Diff:
 $diff
-"@ | codex exec | Out-String
+"@ | claude -p | Out-String
 
   Write-Host "---- Proposed commit plan ----"
   Write-Host $plan
