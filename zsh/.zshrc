@@ -153,8 +153,8 @@ alias g='git'
 
 # ステージ済みの差分からコミットメッセージを生成し、論理的な単位のコミットに分割する
 ai-commit() {
-  if ! command -v codex >/dev/null 2>&1; then
-    echo "codex: command not found" >&2
+  if ! command -v claude >/dev/null 2>&1; then
+    echo "claude: command not found" >&2
     return 127
   fi
 
@@ -165,7 +165,7 @@ ai-commit() {
 
   DIFF=$(git diff --cached)
 
-  PLAN=$(codex exec <<EOF
+  PLAN=$(claude -p <<EOF
 Analyze the following git diff and split it into logical commits.
 
 Return JSON:
@@ -180,6 +180,7 @@ Rules:
 - Use Conventional Commits
 - Group by logical concern
 - Avoid mixing unrelated changes
+- Output only the JSON array, without code fences or prose
 
 Diff:
 $DIFF

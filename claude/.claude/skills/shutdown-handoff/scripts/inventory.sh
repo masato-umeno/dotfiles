@@ -19,7 +19,7 @@ done | awk '
 done
 
 # 監視するプロセス名は HANDOFF_PROCS で足せる（例: HANDOFF_PROCS="Unity Blender"）
-procs="dsh codex claude ${HANDOFF_PROCS:-}"
+procs="dsh claude ${HANDOFF_PROCS:-}"
 echo; echo "## プロセス（$procs）"
 if command -v powershell.exe >/dev/null 2>&1 || command -v pwsh >/dev/null 2>&1; then
   pwsh -NoProfile -Command "Get-Process $(echo $procs | tr " " ",") -ErrorAction SilentlyContinue | Select-Object Name,Id,StartTime | Format-Table -AutoSize | Out-String -Width 160" 2>/dev/null

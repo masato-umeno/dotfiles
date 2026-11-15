@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 段階表が今のモデル一覧に追いついているかを見る。dsh の一覧はエラーの応答から、Codex の一覧は手元のキャッシュから読む。
+# 段階表が今のモデル一覧に追いついているかを見る。dsh の一覧はエラーの応答から読む。
 # 更新日は分担の変更でも新しくなるので、段階表に名前のないモデルと調査日で判定する。
 # 「要調査: はい」なら agent-models-refresh の「自動で調べるとき」に進む。
 # 一覧を読めなければ「読めない一覧」に出して、終了コード 1 にする。追いついているとは言わない。
@@ -8,7 +8,6 @@ models=$(dsh_models)
 PY=$(command -v python3 || command -v python) || { echo "check-models.sh: python がない" >&2; exit 1; }
 DSH_MODELS="$models" PYTHONIOENCODING=utf-8 "$PY" - <<'PY'
 import datetime
-import json
 import os
 import re
 
@@ -23,17 +22,6 @@ if dsh_names:
     names += dsh_names
 else:
     unreadable.append("dsh")
-
-try:
-    cache_path = os.path.expanduser("~/.codex/models_cache.json")
-    cache = json.load(open(cache_path, encoding="utf-8"))
-    codex_names = [m["slug"] for m in cache["models"] if m["visibility"] == "list"]
-except (OSError, ValueError, KeyError, TypeError):
-    codex_names = []
-if codex_names:
-    names += codex_names
-else:
-    unreadable.append("Codex")
 
 if unreadable:
     print("読めない一覧: " + ", ".join(unreadable))

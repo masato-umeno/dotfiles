@@ -5,33 +5,6 @@
 !.env.example
 !.env.template
 
-# Codex の実行時ファイルや生成物はリポジトリに含めない。
-codex/.codex/.codex-global-state.json*
-codex/.codex/.personality_migration
-codex/.codex/ambient-suggestions/
-codex/.codex/auth.json
-codex/.codex/cache/
-codex/.codex/config.toml
-codex/.codex/installation_id
-codex/.codex/log/
-codex/.codex/logs/
-codex/.codex/logs_*.sqlite*
-codex/.codex/models_cache.json
-codex/.codex/rules/default.rules
-codex/.codex/session_index.jsonl
-codex/.codex/sessions/
-codex/.codex/shell_snapshots/
-codex/.codex/skills/.system/
-codex/.codex/sqlite/
-codex/.codex/state_*.sqlite*
-codex/.codex/tmp/
-codex/.codex/vendor_imports/
-codex/.codex/version.json
-codex/.codex/history*
-codex/.codex/*.sqlite*
-codex/.codex/*.tmp
-codex/.codex/*.lock
-
 # Claude Code の実行時ファイルや生成物はリポジトリに含めない。
 claude/.claude/.credentials.json
 claude/.claude/projects/

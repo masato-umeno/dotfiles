@@ -21,7 +21,7 @@ git config core.hooksPath .githooks
 前提: GNU Stow。このリポジトリのチェックアウトのルートで実行する。
 
 ```shell
-packages=(claude codex ghostty ghq git mise nix vim vscode zsh)
+packages=(claude ghostty ghq git mise nix vim vscode zsh)
 stow --simulate --target="$HOME" "${packages[@]}"
 stow --target="$HOME" "${packages[@]}"
 ```
@@ -84,9 +84,7 @@ brew bundle cleanup --file=Brewfile
 
 - `zsh/.zshrc` は `~/.zshrc` になる。
 - `git/.config/git/config` は `~/.config/git/config` になる。
-- `claude/.claude/` は Claude Code のグローバルな指示、設定、スキルを提供する。
-- `codex/.codex/` は Codex のグローバルな指示を提供する。実行時ファイル、キャッシュ、
-  秘密情報、学習された状態は管理しない。
+- `claude/.claude/` は Claude Code のグローバルな指示、設定、スキル、サブエージェントを提供する。
 - `vscode/Library/Application Support/Code/User/settings.json` は macOS の VS Code
   設定パスに配置される。
 - `windows/` には Windows 用の別セットアップがある。
@@ -108,34 +106,14 @@ ghq list
 
 `ghq get` でクローンし、`$(ghq root)` 以下のリポジトリに移動する。
 
-## Codex
-
-`codex` Stow パッケージはグローバルな指示を `~/.codex/` にリンクする。実行時ファイル、キャッシュ、
-秘密情報、マシンローカルな Codex の状態は管理しない。
-
-### 権限と管理対象ファイル
-
-別のサンドボックスラッパーではなく、Codex 標準の権限モードを使う。ワークスペースの範囲から始め、
-作業に必要なときだけタスクごとに広い権限を選ぶ。現在のモードの確認や変更には `/permissions` を使う。
-
-グローバルな指示は `~/.codex/AGENTS.md` にある。学習されたコマンドルール、アプリ設定、認証、
-プラグイン、キャッシュ、ログ、セッションなどの実行時の状態はマシンローカルに置く。
-
-### モデルと使用量
-
-ChatGPT Plus プランでは、マシンローカルの `~/.codex/config.toml` で既定を `gpt-6-sol`、
-reasoning を `medium`、plan モードを `high` にする。軽い作業は `gpt-6-luna`、難しい作業は
-`gpt-6-astra` に `/model` で切り替える。
-
 ## Claude Code
 
 `claude` Stow パッケージは `~/.claude/CLAUDE.md`、`~/.claude/settings.json`、
-`~/.claude/skills/` をリンクする。`CLAUDE.md` は `~/.codex/AGENTS.md` を読み込むので、
-`codex` パッケージも適用し、共通の方針はそちらに書く。`codex` スキルにより、Claude Code は
-価値があると判断したときに Codex CLI を読み取り専用で呼び、独立したレビューやセカンドオピニオンを得られる。
+`~/.claude/skills/`、`~/.claude/agents/` をリンクする。グローバルな作業方針は `CLAUDE.md` に書く。
 
-開発の分担は、全体管理が Opus 5.5、実装が DeepSeek のモデル、レビューが Codex。Codex の指摘を直すかどうかは
-Opus が決める。詳しくは `~/.codex/AGENTS.md` と `agent-orchestrate` スキルに書いている。
+開発の分担は、全体管理が Opus 5.5、実装が DeepSeek のモデル、レビューが Claude Code のサブエージェント
+（`agents/pr-reviewer.md`）。指摘を直すかどうかは Opus が決める。詳しくは `CLAUDE.md` と
+`agent-orchestrate` スキルに書いている。
 
 実装のワーカーは DeepSeek Harness の `dsh` で動かし、作業ツリーは `git worktree` で分ける。DeepSeek Harness の
 アプリを入れて DeepSeek のアカウントでログインしておく。ワーカーの権限やデータの送り先は、

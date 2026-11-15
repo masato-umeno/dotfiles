@@ -1,4 +1,4 @@
-# start.sh・resume.sh・review.sh・run-codex.sh・run-dsh.sh・check-models.sh から読み込む共通の関数。
+# run-dsh.sh・check-models.sh から読み込む共通の関数。
 
 _common_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
@@ -12,18 +12,6 @@ require_linked_worktree() {
   if [ "$gitdir" = "$common" ]; then
     echo "git worktree add で作ったワークツリー以外では起動しない: $1" >&2; exit 1
   fi
-}
-
-# 使う codex を決める。CODEX_BIN があればそれ。Windows では Codex アプリ同梱の最新版を優先する
-# （winget などで入れた CLI が古いと、アプリのランタイムと合わずにサンドボックスの初期化で失敗することがある）。
-codex_bin() {
-  if [ -n "${CODEX_BIN:-}" ]; then echo "$CODEX_BIN"; return; fi
-  local app="" f
-  for f in "${LOCALAPPDATA:-/nonexistent}"/OpenAI/Codex/bin/*/codex.exe; do
-    [ -f "$f" ] || continue
-    if [ -z "$app" ] || [ "$f" -nt "$app" ]; then app="$f"; fi
-  done
-  if [ -n "$app" ]; then echo "$app"; else command -v codex; fi
 }
 
 # 使う dsh を決める。DSH_BIN があればそれ。macOS の cask は dsh を PATH に入れないので、アプリの中も探す。

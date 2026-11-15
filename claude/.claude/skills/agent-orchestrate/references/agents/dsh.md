@@ -1,6 +1,6 @@
 # dsh を実装のワーカーにする
 
-`dsh` は DeepSeek Harness の CLI。`--profile headless` で 1 つの依頼を実行して終わる。実装のワーカーに使い、読むだけのレビューは Codex の枠が尽きたときの予備にする。ここに書いた挙動は macOS の 0.2.1-rc.5 で確かめた。版が変わったら `dsh --profile headless --help` を正とする。
+`dsh` は DeepSeek Harness の CLI。`--profile headless` で 1 つの依頼を実行して終わる。実装のワーカーに使い、読むだけのレビューは Claude の枠が残り少ないときの予備にする。ここに書いた挙動は macOS の 0.2.1-rc.5 で確かめた。版が変わったら `dsh --profile headless --help` を正とする。
 
 ## 準備
 
@@ -66,7 +66,7 @@ bash ~/.claude/skills/agent-orchestrate/scripts/run-dsh.sh 3600 <ワークツリ
 
 `run-dsh.sh` の秒数で止まり、終了コードは 124 になる。macOS では `with_timeout` がプロセスグループに TERM を送り、5 秒後に KILL するので、ワーカーが起動したコマンドも残らない（確かめた）。
 
-## 読むだけのレビューをさせる（Codex の枠が尽きたときの予備）
+## 読むだけのレビューをさせる（Claude の枠が残り少ないときの予備）
 
 ```bash
 DSH_PERMISSION_MODE=read-only bash ~/.claude/skills/agent-orchestrate/scripts/run-dsh.sh 600 <PR のワークツリー> <モデル> <依頼文ファイル>
@@ -74,7 +74,7 @@ DSH_PERMISSION_MODE=read-only bash ~/.claude/skills/agent-orchestrate/scripts/ru
 
 - read-only のサンドボックスが書き込みを止める。依頼文には、手順 4 の指定（編集・commit はしない、正しさのバグだけ、重大度・ファイル:行・起きる手順で）と、差分の見方（`git diff origin/<base>...HEAD`）を書く。`gh` は使えない。
 - PR のブランチがチェックアウトされたワークツリーで動かす。ワーカーがまだ動いているワークツリーでは動かさない。
-- 指摘は Codex のレビューと同じく、そのまま信じず、該当箇所を自分で読んで本当か確かめてから直させる。
+- 指摘はサブエージェントのレビューと同じく、そのまま信じず、該当箇所を自分で読んで本当か確かめてから直させる。
 
 ## Windows（未確認）
 

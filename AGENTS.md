@@ -6,8 +6,8 @@
 
 ## ビルド、テスト、開発コマンド
 
-- `stow --simulate --target="$HOME" claude codex ghostty ghq git mise nix vim vscode zsh` — macOS の既定リンクをプレビューする。
-- `stow --target="$HOME" claude codex ghostty ghq git mise nix vim vscode zsh` — macOS の既定リンクを適用する。
+- `stow --simulate --target="$HOME" claude ghostty ghq git mise nix vim vscode zsh` — macOS の既定リンクをプレビューする。
+- `stow --target="$HOME" claude ghostty ghq git mise nix vim vscode zsh` — macOS の既定リンクを適用する。
 - `brew bundle check --file=Brewfile` — Homebrew の状態が宣言と一致するか確認する。
 
 ビルドシステムはない。確認は「テスト方針」に従う。
@@ -36,10 +36,10 @@
 次のものはコミットしない。
 
 - ユーザー名・マシン名を含む絶対パス（`C:\Users\<名前>\...`、`/Users/<名前>/...`）。`~`、`$HOME`、`%USERPROFILE%`、`$env:LOCALAPPDATA` などで書く。
-- アプリが書き込むマシン固有の値：インストール先やランタイムのハッシュ入りパス、アプリの版、パイプ名、セッションや端末の ID など。Stow で配置した設定ファイルをアプリが書き換えることがある（例：Codex アプリが `config.toml` にランタイムのパスを書く）。その差分はコミットせず、必要ならローカルの設定に分ける。
+- アプリが書き込むマシン固有の値：インストール先やランタイムのハッシュ入りパス、アプリの版、パイプ名、セッションや端末の ID など。Stow で配置した設定ファイルをアプリが書き換えることがある（例：Claude Code が `settings.json` に設定を書き足す）。その差分はコミットせず、必要ならローカルの設定に分ける。
 - トークン・API キー・認証ファイル、メールアドレス（GitHub の noreply を除く）、ホスト名・IP アドレス、非公開のプロジェクトの名前・リポジトリ・ID。
 - 特定のプロジェクトに固有の決まり。エージェントのスキルなどは汎用に書き、プロジェクト固有の値は各リポジトリの側（例：`.agents/<スキル名>.md`）に書く。
 
 コミットの前に `git diff --cached` を見て、上に当たるものが入っていないか確かめる。エージェントは、作業と関係のない変更（アプリが書き換えた設定ファイルなど）をステージしない。操作者が含めるよう頼んだときは、別のコミットに分ける。
 
-グローバルなエージェント方針は `codex/.codex/AGENTS.md` にある。このファイルはリポジトリ固有のガイダンスに絞る。
+グローバルなエージェント方針は `claude/.claude/CLAUDE.md` にある。このファイルはリポジトリ固有のガイダンスに絞る。
